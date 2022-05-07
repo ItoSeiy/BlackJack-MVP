@@ -1,4 +1,4 @@
-using BlackJack.Data;
+using BlackJack.Data;   
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +12,7 @@ namespace BlackJack
 
         private CardData _data;
 
+        [SerializeField]
         private Image _image;
 
         /// <summary>
@@ -19,10 +20,9 @@ namespace BlackJack
         /// 
         /// メソッドをチェーン出来るようにしている
         /// </summary>
-        public Card SetUp(CardData data, Image image, Sprite sprite)
+        public Card SetUp(CardData data, Sprite sprite)
         {
             _data = data;
-            _image = image;
             _image.sprite = sprite;
             return this;
         }
