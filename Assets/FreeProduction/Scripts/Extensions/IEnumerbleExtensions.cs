@@ -4,19 +4,20 @@ using System.Collections.Generic;
 namespace BlackJack.Extension
 {
     /// <summary>
-    /// IEnumerable<T>��List��ForEach�̂悤��ForEach�o����悤�ɂ���g�����\�b�h
+    /// IEnumerable<T>をListのForEachのようにForEach出来るようにする拡張メソッド
+    /// 注意点: 構造体を使用した際にメソッドの中身で書き換えを行うと参照を渡せていないので書き換えられないことです
+    ///
+    /// IEnumerable<T>をForEach出来るようにした理由
     /// 
-    /// IEnumerable<T>��ForEach�o����悤�ɂ������R
+    /// LinqのEnumerbleクラスでクエリをした後にList<T>.ForEachをしようとするとToListしないといけない
+    /// (Enumerbleクラスのメソッド戻り値はIEnmuerbleであるため)
     /// 
-    /// Linq��Enumerble�N���X�ŃN�G�����������List<T>.ForEach�����悤�Ƃ����ToList���Ȃ��Ƃ����Ȃ�
-    /// (Enumerble�N���X�̃��\�b�h�߂�l��IEnmuerble�ł��邽��)
+    /// しかしToListの処理はかなり重くパフォーマンスが下がる
     /// 
-    /// ������ToList�̏����͂��Ȃ�d���p�t�H�[�}���X��������
+    /// そのためIEnumerbleに拡張メソッドを作りIEnumerbleの状態でForEachできる拡張メソッドを用意した
     /// 
-    /// ���̂���IEnumerble�Ɋg�����\�b�h�����IEnumerble�̏�Ԃ�ForEach�ł���g�����\�b�h��p�ӂ���
-    /// 
-    /// �����ɒʏ�̔z���string�ł�ForEach���g�p�ł���悤�ɂȂ�V���v����foreach���ł���悤�ɂȂ�
-    /// �l�X�g���󂭂Ȃ��ĉǐ����ǂ��Ȃ�
+    /// 同時に通常の配列やstringでもForEachを使用できるようになりシンプルにforeachをできるようになり
+    /// ネストが浅くなって可読性が良くなる
     /// </summary>
     public static class IEnumerbleExtensions
     {
