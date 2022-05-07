@@ -5,7 +5,7 @@ namespace BlackJack.Extension
 {
     /// <summary>
     /// IEnumerable<T>をListのForEachのようにForEach出来るようにする拡張メソッド
-    /// 注意点: 構造体を使用した際にメソッドの中身で書き換えを行うと参照を渡せていないので書き換えられないことです
+    /// 注意点: 構造体を使用した際にメソッドの中身で書き換えを行うと参照を渡せていないので書き換えられない
     ///
     /// IEnumerable<T>をForEach出来るようにした理由
     /// 
