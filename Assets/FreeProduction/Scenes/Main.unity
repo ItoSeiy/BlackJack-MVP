@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d055c40fd9abd974eb5b19f6d6eb40c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deckNum: 3
+  _deckNum: 1
   _cardPrefab: {fileID: 6565077456441109425, guid: 0549d59f816f1e641b2ecc90107ceeea, type: 3}
 --- !u!4 &663535568
 Transform:

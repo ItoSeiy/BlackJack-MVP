@@ -59,9 +59,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    _num: 0
-    _rank: 0
-    _suit: 0
+    _num: 10
+    _rank: 5
+    _suit: 3
   _image: {fileID: 6565077456441109431}
 --- !u!114 &6565077456441109431
 MonoBehaviour:
@@ -83,7 +83,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -3493636700439865340, guid: 6f2279b43c205c64bbc2ae3c220a7ae1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
