@@ -10,6 +10,7 @@ namespace BlackJack
 
         public Image Image => _image;
 
+        [SerializeField]
         private CardData _data;
 
         [SerializeField]
@@ -24,13 +25,14 @@ namespace BlackJack
         {
             _data = data;
             _image.sprite = sprite;
+            _image.SetNativeSize(); 
             return this;
         }
 
         public Card Show()
         {
             print($"ƒX[ƒg‚Í{_data.Suit} ŠG•¿‚Í{_data.Rank}" +
-                  $"\n‰æ‘œ‚Í{_image.name} ”š‚Í{_data.Num}");
+                  $"\n‰æ‘œ‚Í{_image.sprite.name} ”š‚Í{_data.Num}");
             return this;
         }
     }

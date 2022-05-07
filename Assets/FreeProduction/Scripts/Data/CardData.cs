@@ -34,17 +34,21 @@ namespace BlackJack.Data
             _num = num;
             _rank = rank;
             _suit = suit;
+
+            // ずれた数字プロパティによってを補正を行う
+            _num = Num;
         }
 
         public enum RankType
         {
-            DefaultNum = 0,
+            /// <summary>デフォルト 数字のみ</summary>
+            None,
 
             A1,
             A11,
-            J = 10,
-            Q = 10,
-            K = 10
+            J,
+            Q,
+            K
         }
 
         public enum SuitType
