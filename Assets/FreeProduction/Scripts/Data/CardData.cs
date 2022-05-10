@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BlackJack.Data
 {
@@ -29,14 +30,26 @@ namespace BlackJack.Data
         [Header("トランプのスート(マーク)")]
         private SuitType _suit;
 
-        public CardData(int num, RankType rank, SuitType suit)
+        [SerializeField]
+        [Header("トランプのイメージ")]
+        private Sprite _sprite;
+
+        public CardData(int num, RankType rank, SuitType suit, Sprite sprite)
         {
             _num = num;
             _rank = rank;
             _suit = suit;
+            _sprite = sprite;
 
             // ずれた数字プロパティによってを補正を行う
             _num = Num;
+        }
+
+        public CardData Show()
+        {
+            Debug.Log($"スートは{Suit} 絵柄は{Rank}" +
+                  $"\n画像は{_sprite.name} 数字は{Num}");
+            return this;
         }
 
         public enum RankType

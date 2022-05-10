@@ -2,21 +2,41 @@ using BlackJack.Data;
 using BlackJack.Extension;
 using System;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BlackJack.Manager
 {
+    /// <summary>
+    /// カードのデータを生成保持するクラス
+    /// </summary>
     public class CardManager : SingletonMonoBehaviour<CardManager>
     {
+        public List<CardData> CardStack
+        {
+            get
+            {
+                if(_cardStack != null)
+                {
+                    return _cardStack;
+                }
+                else
+                {
+                    Debug.Log($"デッキが作成されていないまたは空の可能性があります");
+                    return null;
+                }
+            }
+        }
+
         [SerializeField]
         [Header("トランプのデッキをいくつ用意するか")]
         private int _deckNum = 3;
 
-        [SerializeField]
-        [Header("カードのテンプレートのプレハブ")]
-        private Card _cardPrefab;
-        
-        /// <summary>実際に生成を行うカード</summary>
-        private Card[,] _cards;
+        /// <summary>
+        /// トランプの山札
+        /// 山札は可変であるためListを使用
+        /// </summary>
+        private List<CardData> _cardStack = new List<CardData>();
 
         private Sprite[] _cardSprites = new Sprite[CARD_NUM];
         
@@ -53,23 +73,27 @@ namespace BlackJack.Manager
 
         private void CreateCards()
         {
-            _cards = new Card[_deckNum, CARD_NUM];
+            int tempIndex = 0;
 
-            for (int deckIndex = 0; deckIndex < _deckNum; deckIndex++)
+            for (int cardIndex = 0; cardIndex < _deckNum * CARD_NUM; cardIndex++)
             {
-                for(int cardIndex = 0; cardIndex < CARD_NUM; cardIndex++)
+                if(tempIndex == CARD_NUM -1)
                 {
-                    int num = GetNum(_cardSprites[cardIndex].name);
-
-                    CardData.RankType rank = GetRank(_cardSprites[cardIndex].name);
-
-                    CardData.SuitType suit = GetSuit(cardIndex);
-
-                    _cards[deckIndex, cardIndex] = _cardPrefab
-                        .SetUp(new CardData(num, rank, suit), _cardSprites[cardIndex])
-                        .Show();
+                    tempIndex = 0;
                 }
+
+                int num = GetNum(_cardSprites[tempIndex].name);
+
+                CardData.RankType rank = GetRank(_cardSprites[tempIndex].name);
+
+                CardData.SuitType suit = GetSuit(tempIndex);
+
+                _cardStack.Add(new CardData(num, rank, suit, _cardSprites[tempIndex]));
+
+                tempIndex++;
             }
+            // デッキのシャッフル
+            _cardStack = _cardStack.OrderBy(_ => Guid.NewGuid()).ToList();
         }
 
         /// <summary>
