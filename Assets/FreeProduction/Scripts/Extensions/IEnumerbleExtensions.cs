@@ -21,14 +21,12 @@ namespace BlackJack.Extension
     /// </summary>
     public static class IEnumerbleExtensions
     {
-        public static IEnumerable<T> ForEachExt<T>(this IEnumerable<T> sourceT, Action<T> action)
+        public static void ForEachExt<T>(this IEnumerable<T> sourceT, Action<T> action)
         {
             foreach (var st in sourceT)
             {
                 action(st);
             }
-
-            return sourceT;
         }
     }
 }
