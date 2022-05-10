@@ -12,6 +12,8 @@ namespace BlackJack.Manager
     /// </summary>
     public class CardManager : SingletonMonoBehaviour<CardManager>
     {
+        // public CardData CurrentCard => _cardStack.Cu;
+
         public List<CardData> CardStack
         {
             get
