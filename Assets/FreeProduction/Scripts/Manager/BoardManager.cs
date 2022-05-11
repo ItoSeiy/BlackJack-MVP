@@ -12,22 +12,19 @@ namespace BlackJack.Manager
         private int _dealerCardNum;
         private int _playerCardNum;
 
-        public void DrawCard(Person person)
+        [ContextMenu("Player")]
+        public void DrawPlayerCard()
         {
-            switch (person)
-            {
-                case Person.Player:
+            _playerCardNum += CardManager.Instance.CurrentCard.Num;
+            Debug.Log($"プレイヤーがカードを引いた\n現在の数字は{_playerCardNum}");
 
-                    
-                    
-                    break;
+        }
 
-                case Person.Dealer:
-
-
-
-                    break;
-            }
+        [ContextMenu("Dealer")]
+        public void DrawDealerCard()
+        {
+            _dealerCardNum += CardManager.Instance.CurrentCard.Num;
+            Debug.Log($"ディーラーがカードを引いた\n現在の数字は{_dealerCardNum}");
         }
 
         public enum Person

@@ -12,8 +12,33 @@ namespace BlackJack.Manager
     /// </summary>
     public class CardManager : SingletonMonoBehaviour<CardManager>
     {
-        // public CardData CurrentCard => _cardStack.Cu;
+        /// <summary>
+        /// 山札の一番上にきているカード
+        /// </summary>
+        public CardData CurrentCard
+        {
+            get
+            {
+                if(_cardStack != null)
+                {
+                    // 初期値が -1 のため先にインクリメントが可能
+                    _cardStackIndex++;
+                    Debug.Log($"Index{_cardStackIndex}のカードを引きます");
 
+                    return _cardStack[_cardStackIndex];
+                }
+                else
+                {
+                    Debug.Log($"デッキが作成されていないまたは空の可能性があります");
+                    return default;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 山札 
+        /// すでに引かれたカードは除外されていない
+        /// </summary>
         public List<CardData> CardStack
         {
             get
@@ -30,15 +55,21 @@ namespace BlackJack.Manager
             }
         }
 
+        /// <summary>山札のIndexの参照</summary>
+        public int CardStackIndex => _cardStackIndex;
+
         [SerializeField]
         [Header("トランプのデッキをいくつ用意するか")]
         private int _deckNum = 3;
 
         /// <summary>
         /// トランプの山札
-        /// 山札は可変であるためListを使用
+        /// 山札は可変(シャッフル等)であるためListにした
         /// </summary>
-        private List<CardData> _cardStack = new List<CardData>();
+        private List<CardData> _cardStack = null;
+        
+        /// <summary>山札からトランプを引く際に使用するIndex</summary>
+        private int _cardStackIndex = -1;
 
         private Sprite[] _cardSprites = new Sprite[CARD_NUM];
         
@@ -75,6 +106,8 @@ namespace BlackJack.Manager
 
         private void CreateCards()
         {
+            _cardStack = new List<CardData>();
+
             int tempIndex = 0;
 
             for (int cardIndex = 0; cardIndex < _deckNum * CARD_NUM; cardIndex++)
