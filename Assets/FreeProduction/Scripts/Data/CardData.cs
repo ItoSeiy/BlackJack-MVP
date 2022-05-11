@@ -52,6 +52,14 @@ namespace BlackJack.Data
             return this;
         }
 
+        public CardData ChangeRank(RankType rank)
+        {
+            _rank = rank;
+            Debug.Log("カードのランクが変更された");
+            Show();
+            return this;
+        }
+
         public enum RankType
         {
             /// <summary>デフォルト 数字のみ</summary>

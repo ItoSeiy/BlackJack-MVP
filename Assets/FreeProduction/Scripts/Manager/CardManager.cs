@@ -14,7 +14,7 @@ namespace BlackJack.Manager
         #region Properties
 
         /// <summary>
-        /// 山札の一番上にきているカード
+        /// 山札の一番上のトランプ
         /// </summary>
         public CardData CurrentCard
         {
@@ -24,7 +24,7 @@ namespace BlackJack.Manager
                 {
                     // 初期値が -1 のため先にインクリメントが可能
                     _cardStackIndex++;
-                    print($"Index{_cardStackIndex}のカードを引きます");
+                    //print($"Index{_cardStackIndex}のカードを引きます");
 
                     // カウンティング(不正)防止のために余裕をもってトランプを再生成する
                     if(_cardStackIndex > _cardStack.Count - CARD_NUM)
