@@ -9,9 +9,15 @@ namespace BlackJack.Manager
     /// </summary>
     public class BoardManager : SingletonMonoBehaviour<BoardManager>
     {
+        #region Properties
+
         public int PlayerCardNum => _playerCardNum;
 
         public int DealerCardNum => _dealerCardNum;
+
+        #endregion
+
+        #region Member Variables
 
         /// <summary>プレイヤーの数字</summary>
         private int _playerCardNum;
@@ -22,6 +28,17 @@ namespace BlackJack.Manager
         /// <summary>ディーラーの伏せているカードの数字</summary>
         private int _dealerHoleCardNum;
 
+        #endregion
+
+        #region UnityMethods
+
+        protected override void Awake()
+        {
+            base.Awake();
+            CardManager.Instance.OnCreateEnd += StartGame;
+        }
+
+        #endregion
 
         public enum Person { Player, Dealer}
 

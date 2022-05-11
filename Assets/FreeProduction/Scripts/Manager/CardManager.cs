@@ -1,9 +1,8 @@
 using BlackJack.Data;
-using BlackJack.Extension;
 using System;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace BlackJack.Manager
 {
@@ -12,6 +11,8 @@ namespace BlackJack.Manager
     /// </summary>
     public class CardManager : SingletonMonoBehaviour<CardManager>
     {
+        #region Properties
+
         /// <summary>
         /// 山札の一番上にきているカード
         /// </summary>
@@ -58,9 +59,17 @@ namespace BlackJack.Manager
         /// <summary>山札のIndexの参照</summary>
         public int CardStackIndex => _cardStackIndex;
 
+        #endregion
+
+        #region Inspector Variables
+
         [SerializeField]
         [Header("トランプのデッキをいくつ用意するか")]
         private int _deckNum = 3;
+
+        #endregion
+
+        #region Member Variables
 
         /// <summary>
         /// トランプの山札
@@ -72,7 +81,11 @@ namespace BlackJack.Manager
         private int _cardStackIndex = -1;
 
         private Sprite[] _cardSprites = new Sprite[CARD_NUM];
-        
+
+        #endregion
+
+        #region Constant
+
         /// <summary>トランプ1デッキに対するトランプの枚数</summary>
         private const int CARD_NUM = 52;
 
@@ -92,12 +105,30 @@ namespace BlackJack.Manager
         private readonly RangeValue<int> SUIT_INDEX_RANGE_SPADE
             = new RangeValue<int>(39, 51);
 
+        #endregion
+
+        #region Events
+
+        /// <summary>山札の生成が終わった後に呼び出される</summary>
+        public event Action OnCreateEnd;
+
+        #endregion
+
+        #region Unity Methods
+
         protected override void Awake()
         {
             base.Awake();
             LoadSprite();
             CreateCards();
         }
+
+        #endregion
+
+        #region Public Methods
+        #endregion
+
+        #region Privete Methods
 
         private void LoadSprite()
         {
@@ -214,5 +245,7 @@ namespace BlackJack.Manager
                 return 0;
             }
         }
+
+        #endregion
     }
 }
