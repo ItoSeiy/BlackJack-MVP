@@ -2,6 +2,7 @@ using BlackJack.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UniRx;
 
 namespace BlackJack.View
 {
