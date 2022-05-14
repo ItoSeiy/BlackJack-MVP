@@ -23,7 +23,8 @@ namespace BlackJack.Manager
         #region Inspector Variables
 
         [SerializeField]
-        private float _drawDuration = 0.4f;
+        [Header("カードを引く速度の間隔")]
+        private float _drawDuration = 1f;
 
         #endregion
 
@@ -119,22 +120,35 @@ namespace BlackJack.Manager
             _playerHand.Add(CardManager.Instance.CurrentCard);
             _playerHandNum += _playerHand[_playerHandIndex].Num;
 
-            Debug.Log($"プレイヤーがカードを引いた\n現在の数字は{_playerHandNum}");
+            Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}"+
+                $"\n現在の数字は{_playerHandNum}");
 
             if(CheckBust(_playerHandNum) == true)
             {
-                //var tempHand = _playerHand.Where(x => x.Rank == CardData.RankType.A11)
-                //    .Select(y => y.ChangeRank(CardData.RankType.A11));
+                bool existsA11 = false;
 
-                //if(tempHand.Any())
-                //{
-                //    _playerHandNum -= ACE_CARD_OFFSET;
+                _playerHand = _playerHand.Select(x =>
+                {
+                    // バーストした際にカードにACE(11)が含まれていたらACE(1)として返す
+                    // ACEはソフトハンドといって11とも1とも認識できる
+                    if(x.Rank == CardData.RankType.A11)
+                    {
+                        existsA11 = true;
+                        _playerHandNum -= ACE_CARD_OFFSET;
+                        return x.ChangeRank(CardData.RankType.A1);
+                    }
+                    else
+                    {
+                        return x;
+                    }
+                }).ToList();
 
-
-
-                //    _playerHandIndex++;
-                //    return;
-                //}
+                if(existsA11 == true)
+                {
+                    Debug.Log($"21を超えたがACE(11)が含まれていたためハンドの数字が変更された" +
+                        $"\n現在の数字は{_playerHandNum}");
+                    return;
+                }
 
                 print("プレイヤーがバーストした プレイヤーの負け");
                 OnPlayerActionEnd();
@@ -165,8 +179,8 @@ namespace BlackJack.Manager
                     break;
             }
 
-            Debug.Log($"ディーラーがカードを引いた\n現在のアップカードは{_dealerHandNum}" +
-                $"ホールカードは{_dealerHoleHandNum}");
+            Debug.Log($"ディーラーがカードを引いた 引いた数字は{_dealerHand[_dealerHandIndex].Num}" +
+                $"\n現在のアップカードは{_dealerHandNum}ホールカードは{_dealerHoleHandNum}");
 
             _dealerHandIndex++;
         }
@@ -213,62 +227,73 @@ namespace BlackJack.Manager
             ShowHoleCard();
 
             // ディーラーはハンドが17以上になるまで引き続ける
-            while(_dealerHandNum < DEALER_DRAWING_HAND_LIMIT)
+            while (_dealerHandNum < DEALER_DRAWING_HAND_LIMIT)
             {
-                DrawDealerCard(DealerCardType.Up);
                 yield return new WaitForSeconds(_drawDuration);
+                DrawDealerCard(DealerCardType.Up);
             }
 
-            // ディーラがハンドを引き終えたら
+            // ディーラがハンドを引き終えたら最終的な勝敗の判別を行う
             if (_dealerHandNum >= DEALER_DRAWING_HAND_LIMIT)
             {
-                // バーストの状況を確認して勝ち負けを確定させる
-                if (CheckBust(_dealerHandNum) == true
-                    && CheckBust(_playerHandNum) == true)
-                {
-                    print("ディーラーがバーストした しかしプレイヤーはすでにバーストしている");
-                    Init();
-                    yield break;
-                }
-                else if (CheckBust(_dealerHandNum) == true)
-                {
-                    print("ディーラーがバーストした プレイヤーの勝ち");
-                    Init();
-                    yield break;
-                }
-                else if(CheckBust(_playerHandNum) == true)
-                {
-                    print("ディーラはバーストしなかった ディーラーの勝ち");
-                    Init();
-                    yield break;
-                }
-
-                // 両者バーストしていなかったら数字で勝敗を確定させる
-                if (_playerHandNum > _dealerHandNum)
-                {
-                    print($"プレイヤーの勝ち\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
-                    Init();
-                }
-                else if(_playerHandNum < _dealerHandNum)
-                {
-                    print($"ディーラーの勝ち\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
-                    Init();
-                }
-                else
-                {
-                    print("引き分け\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
-                    Init();
-                }
+                yield return new WaitForSeconds(_drawDuration);
+                Judge();
             }
         }
 
+        /// <summary>
+        /// 最終的な勝敗の判別を行う
+        /// </summary>
+        private void Judge()
+        {
+            // バーストの状況を確認して勝ち負けを確定させる
+            if (CheckBust(_dealerHandNum) == true
+                && CheckBust(_playerHandNum) == true)
+            {
+                print("ディーラーがバーストした しかしプレイヤーはすでにバーストしている");
+                Init();
+                return;
+            }
+            else if (CheckBust(_dealerHandNum) == true)
+            {
+                print("ディーラーがバーストした プレイヤーの勝ち");
+                Init();
+                return;
+            }
+            else if (CheckBust(_playerHandNum) == true)
+            {
+                print("ディーラはバーストしなかった ディーラーの勝ち");
+                Init();
+                return;
+            }
+
+            // 両者バーストしていなかったら数字で勝敗を確定させる
+            if (_playerHandNum > _dealerHandNum)
+            {
+                print($"プレイヤーの勝ち\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
+                Init();
+            }
+            else if (_playerHandNum < _dealerHandNum)
+            {
+                print($"ディーラーの勝ち\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
+                Init();
+            }
+            else
+            {
+                print($"引き分け\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
+                Init();
+            }
+        }
+
+        /// <summary>
+        /// ディーラーが伏せているカード(ホールカード)を公開する
+        /// </summary>
         private void ShowHoleCard()
         {
             _dealerHandNum += _dealerHoleHandNum;
             _dealerHoleHandNum = 0;
             print($"ディーラーがホールカードを公開した\n現在の数字は{_dealerHandNum}");
         }
-
 
         private bool CheckBlackJack(int num)
         {
