@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace BlackJack.Manager
+namespace BlackJack.Model
 {
     /// <summary>
-    /// カードのデータを生成保持するクラス
+    /// カードのデータを生成保持するクラス(モデル)
     /// </summary>
-    public class CardManager : SingletonMonoBehaviour<CardManager>
+    public class CardStackModel : SingletonMonoBehaviour<CardStackModel>
     {
         #region Properties
 

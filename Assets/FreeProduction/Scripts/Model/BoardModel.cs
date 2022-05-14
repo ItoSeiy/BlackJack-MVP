@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace BlackJack.Manager
+namespace BlackJack.Model
 {
     /// <summary>
-    /// プレイヤーやディーラの手札を管理するクラス
+    /// プレイヤーやディーラの手札を管理するクラス(モデル)
     /// </summary>
-    public class BoardManager : SingletonMonoBehaviour<BoardManager>
+    public class BoardModel : SingletonMonoBehaviour<BoardModel>
     {
         #region Properties
 
@@ -117,7 +117,7 @@ namespace BlackJack.Manager
         [ContextMenu("Draw")]
         public void DrawPlayerCard()
         {
-            _playerHand.Add(CardManager.Instance.CurrentCard);
+            _playerHand.Add(CardStackModel.Instance.CurrentCard);
             _playerHandNum += _playerHand[_playerHandIndex].Num;
 
             Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}"+
@@ -166,14 +166,14 @@ namespace BlackJack.Manager
             {
                 case DealerCardType.Up:
 
-                    _dealerHand.Add(CardManager.Instance.CurrentCard);
+                    _dealerHand.Add(CardStackModel.Instance.CurrentCard);
                     _dealerHandNum += _dealerHand[_dealerHandIndex].Num;
 
                     break;
 
                 case DealerCardType.Hole:
 
-                    _dealerHand.Add(CardManager.Instance.CurrentCard);
+                    _dealerHand.Add(CardStackModel.Instance.CurrentCard);
                     _dealerHoleHandNum = _dealerHand[_dealerHandIndex].Num;
 
                     break;
