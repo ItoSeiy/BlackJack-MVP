@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UniRx;
 
 namespace BlackJack.Model
 {
@@ -13,6 +14,8 @@ namespace BlackJack.Model
     public class BoardModel : SingletonMonoBehaviour<BoardModel>
     {
         #region Properties
+
+        public IObservable<CardData> ObservablePlayerCurrentCard => _playerCurrentCard;
 
         public int PlayerCardNum => _playerHandNum;
 
@@ -29,6 +32,8 @@ namespace BlackJack.Model
         #endregion
 
         #region Member Variables
+
+        private ReactiveProperty<CardData> _playerCurrentCard = new ReactiveProperty<CardData>();
 
         /// <summary>プレイヤーの手札</summary>
         private List<CardData> _playerHand = new List<CardData>();
@@ -119,6 +124,7 @@ namespace BlackJack.Model
         {
             _playerHand.Add(CardStackModel.Instance.CurrentCard);
             _playerHandNum += _playerHand[_playerHandIndex].Num;
+            _playerCurrentCard.Value = _playerHand[_playerHandIndex];
 
             Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}"+
                 $"\n現在の数字は{_playerHandNum}");

@@ -18,6 +18,8 @@ namespace BlackJack.Data
 
         public SuitType Suit => _suit;
 
+        public Sprite Sprite => _sprite;
+
         [SerializeField]
         [Header("計算に使うトランプの数字")]
         private int _num;
