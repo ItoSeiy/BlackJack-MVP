@@ -20,14 +20,24 @@ namespace BlackJack.View
 
         [SerializeField]
         [Header("カードを公開するときのアニメーションのステート名")]
-        private string _cardOpenAnimName = "Open";
+        private string _openCardAnimName = "Open";
         
-        public CardView SetSprite(Sprite sprite)
+        public CardView SetSprite(Sprite sprite, bool doOpen = true)
         {
             _cardFrontImage.sprite = sprite;
             gameObject.SetActive(true);
-            _animator.Play(_cardOpenAnimName);
+
+            if(doOpen == true)
+            {
+                OpenCard();
+            }
+
             return this;
+        }
+
+        public void OpenCard()
+        {
+            _animator.Play(_openCardAnimName);
         }
     }
 }
