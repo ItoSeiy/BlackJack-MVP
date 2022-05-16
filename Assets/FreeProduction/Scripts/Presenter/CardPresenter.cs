@@ -29,6 +29,7 @@ namespace BlackJack.Presenter
         private void Awake()
         {
             SubscribePlayerCard();
+            BoardModel.Instance.OnInitialize += SubscribePlayerCard;
         }
         
         private void SubscribePlayerCard()
