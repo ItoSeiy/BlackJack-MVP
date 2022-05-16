@@ -15,7 +15,11 @@ namespace BlackJack.Model
     {
         #region Properties
 
-        public IObservable<CardData> ObservablePlayerCurrentCard => _playerCurrentCard;
+        /// <summary>
+        /// 最新のプレイヤーのカード
+        /// 監視可能, プレイヤーの手札の更新時にイベントを発生する
+        /// </summary>
+        public IObservable<CardData> ObservableLatestPlayerCard => _latestPlayerCard;
 
         public int PlayerCardNum => _playerHandNum;
 
@@ -33,7 +37,7 @@ namespace BlackJack.Model
 
         #region Member Variables
 
-        private ReactiveProperty<CardData> _playerCurrentCard = new ReactiveProperty<CardData>();
+        private ReactiveProperty<CardData> _latestPlayerCard = new ReactiveProperty<CardData>();
 
         /// <summary>プレイヤーの手札</summary>
         private List<CardData> _playerHand = new List<CardData>();
@@ -109,7 +113,6 @@ namespace BlackJack.Model
         [ContextMenu("StartGame")]
         public void StartGame()
         {
-            Init();
             StartCoroutine(OnStartDrawing());
         }
         
@@ -124,7 +127,7 @@ namespace BlackJack.Model
         {
             _playerHand.Add(CardStackModel.Instance.CurrentCard);
             _playerHandNum += _playerHand[_playerHandIndex].Num;
-            _playerCurrentCard.Value = _playerHand[_playerHandIndex];
+            _latestPlayerCard.Value = _playerHand[_playerHandIndex];
 
             Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}"+
                 $"\n現在の数字は{_playerHandNum}");
@@ -328,6 +331,9 @@ namespace BlackJack.Model
 
         private void Init()
         {
+            print("InitBoard");
+            _latestPlayerCard.Dispose();
+
             _playerHand = new List<CardData>();
             _playerHandNum = 0;
             _playerHandIndex = 0;

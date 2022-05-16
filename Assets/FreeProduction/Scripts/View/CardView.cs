@@ -12,7 +12,8 @@ namespace BlackJack.View
     public class CardView : MonoBehaviour
     {
         [SerializeField]
-        Image _cardImage;
+        [Header("トランプの表のImage")]
+        Image _cardFrontImage;
 
         [SerializeField]
         private Animator _animator;
@@ -21,11 +22,12 @@ namespace BlackJack.View
         [Header("カードを公開するときのアニメーションのステート名")]
         private string _cardOpenAnimName = "Open";
         
-        public void SetSprite(Sprite sprite)
+        public CardView SetSprite(Sprite sprite)
         {
-            _cardImage.sprite = sprite;
+            _cardFrontImage.sprite = sprite;
             gameObject.SetActive(true);
             _animator.Play(_cardOpenAnimName);
+            return this;
         }
     }
 }
