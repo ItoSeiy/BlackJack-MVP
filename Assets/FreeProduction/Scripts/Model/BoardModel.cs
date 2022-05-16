@@ -25,6 +25,12 @@ namespace BlackJack.Model
 
         public int DealerCardNum => _dealerHandNum;
 
+        /// <summary>
+        /// ブラックジャックが開始しているかどうかのフラグ
+        /// true -> 開始
+        /// </summary>
+        public bool IsStarted { get; private set; } = false;
+
         #endregion
 
         #region Inspector Variables
@@ -79,8 +85,7 @@ namespace BlackJack.Model
 
         #region Events
 
-        /// <summary>変数に変動があった際に呼ばれる</summary>
-        public event Action OnVariablesChange;
+        public event Action OnInitialize;
 
         #endregion
 
@@ -113,18 +118,25 @@ namespace BlackJack.Model
         [ContextMenu("StartGame")]
         public void StartGame()
         {
+            if (IsStarted == true) return;
+
+            IsStarted = true;
             StartCoroutine(OnStartDrawing());
         }
         
         [ContextMenu("EndAction")]
         public void OnPlayerActionEnd()
         {
+            if(IsStarted == false) return;
+
             StartCoroutine(OnEndDrawing());
         }
 
         [ContextMenu("Draw")]
         public void DrawPlayerCard()
         {
+            if (IsStarted == false) return;
+
             _playerHand.Add(CardStackModel.Instance.CurrentCard);
             _playerHandNum += _playerHand[_playerHandIndex].Num;
             _latestPlayerCard.Value = _playerHand[_playerHandIndex];
@@ -333,6 +345,9 @@ namespace BlackJack.Model
         {
             print("InitBoard");
             _latestPlayerCard.Dispose();
+            _latestPlayerCard = new ReactiveProperty<CardData>();
+
+            IsStarted = false;
 
             _playerHand = new List<CardData>();
             _playerHandNum = 0;
@@ -342,6 +357,8 @@ namespace BlackJack.Model
             _dealerHandNum = 0;
             _dealerHandIndex = 0;
             _dealerHoleHandNum = 0;
+
+            OnInitialize?.Invoke();
         }
 
         #endregion
