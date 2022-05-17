@@ -22,9 +22,6 @@ namespace BlackJack.Presenter
         #region Member Variables
         #endregion
 
-        #region Constant
-        #endregion
-
         #region Events
         #endregion
 
@@ -45,12 +42,40 @@ namespace BlackJack.Presenter
         private void Subscribe()
         {
             _inputView.ObservableGameStart.Subscribe(OnGameStart);
-            BoardModel.Instance.OnInitialize += () => _inputView.Init();
+            _inputView.ObservableHitButton.Subscribe(_ => OnHitButton());
+            _inputView.ObservableStayButton.Subscribe(_ => OnStayButton());
+
+            BoardModel.Instance.SetSelectAction
+                .Skip(4)
+                .Subscribe(_inputView.SetActionButton);
+
+            BoardModel.Instance.OnInitialize += OnInit;
+        }
+
+        private void OnInit()
+        {
+            _inputView.Init();
+
+            // 初回の2回は初回のドローなのでスキップする 
+            // スキップ後はボタンを表示する
+            BoardModel.Instance.SetSelectAction
+                .Skip(4)
+                .Subscribe(_inputView.SetActionButton);
         }
 
         private void OnGameStart(int vetValue)
         {
             BoardModel.Instance.StartGame();
+        }
+
+        private void OnHitButton()
+        {
+            BoardModel.Instance.DrawPlayerCard();
+        }
+
+        private void OnStayButton()
+        {
+            BoardModel.Instance.EndAction();
         }
 
         #endregion
