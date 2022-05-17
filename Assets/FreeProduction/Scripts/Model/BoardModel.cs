@@ -94,11 +94,17 @@ namespace BlackJack.Model
 
         #region Events
 
+        /// <summary>ボードの初期化の際に実行</summary>
         public event Action OnInitialize;
 
-        public event Action OnOpenInitialUpCard;
+        /// <summary>アップカードがめくられる際に呼び出される</summary>
+        public event Action OnOpenUpCard;
 
+        /// <summary>ホールカードがめくられる際に呼び出される</summary>
         public event Action OnOpenHoleCard;
+
+        /// <summary>プレイヤーがアクションを選択できるようになった際に呼び出される</summary>
+        public event Action OnCanSelectAction;
 
         #endregion
 
@@ -228,7 +234,7 @@ namespace BlackJack.Model
             yield return new WaitForSeconds(_drawDuration);
 
             DrawDealerCard(DealerCardType.Hole);
-            OnOpenInitialUpCard?.Invoke();
+            OnOpenUpCard?.Invoke();
 
             if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
                 && CheckBlackJack(_playerHandNum) == true)
@@ -236,19 +242,24 @@ namespace BlackJack.Model
                 OpenHoleCard();
                 print("両者がブラックジャック 引き分け");
                 Init();
+                yield break;
             }
             else if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true)
             {
                 OpenHoleCard();
                 print("ディーラーがブラックジャック ディーラーの勝ち");
                 Init();
+                yield break;
             }
             else if (CheckBlackJack(_playerHandNum) == true)
             {
                 OpenHoleCard();
                 print("プレイヤーがブラックジャック プレイヤーの勝ち");
                 Init();
+                yield break;
             }
+
+            OnCanSelectAction?.Invoke();
         }
 
         /// <summary>プレイヤーのアクションが終わった際のカードを引く処理</summary>
