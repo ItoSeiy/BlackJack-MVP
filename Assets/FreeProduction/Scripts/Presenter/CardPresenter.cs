@@ -53,15 +53,15 @@ namespace BlackJack.Presenter
 
         private void Start()
         {
-            SubscribeCard();
-            BoardModel.Instance.OnInitialize += SubscribeCard;
+            Subscribe();
+            BoardModel.Instance.OnInitialize += Subscribe;
         }
 
         #endregion
 
         #region Privete Methods
 
-        private void SubscribeCard()
+        private void Subscribe()
         {
             BoardModel.Instance.ObservableLatestPlayerCard
                 .Where(x => x.Sprite != null)
@@ -84,7 +84,7 @@ namespace BlackJack.Presenter
                     }
                 });
 
-            BoardModel.Instance.OnOpenInitialUpCard += OpenInitialUpCard;
+            BoardModel.Instance.OnOpenUpCard += OpenInitialUpCard;
             BoardModel.Instance.OnOpenHoleCard += OpenHoleCard;
         }
 
