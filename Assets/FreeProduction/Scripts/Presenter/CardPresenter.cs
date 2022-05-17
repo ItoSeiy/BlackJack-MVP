@@ -51,7 +51,7 @@ namespace BlackJack.Presenter
 
         #region Unity Methods
 
-        private void Awake()
+        private void Start()
         {
             SubscribeCard();
             BoardModel.Instance.OnInitialize += SubscribeCard;
