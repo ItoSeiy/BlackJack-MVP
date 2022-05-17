@@ -49,13 +49,13 @@ namespace BlackJack.View
         /// スタートボタンが押されたときの処理
         /// int -> ベッティング金額
         /// </summary>
-        private Subject<int> _onStartButton;
+        private Subject<int> _onStartButton = new Subject<int>();
 
         #endregion
 
         #region Unity Methods
 
-        private void Awake()
+        private void Start()
         {
             SetUp();
         }
@@ -79,7 +79,6 @@ namespace BlackJack.View
         private void OnStartButton()
         {
             if (_betValue == 0) return;
-            
             _onStartButton.OnNext(_betValue);
             _betValue = 0;
         }
