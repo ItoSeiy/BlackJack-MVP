@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BlackJack.View;
+using UniRx;
 
 namespace BlackJack.Presenter
 {
@@ -10,6 +12,10 @@ namespace BlackJack.Presenter
         #endregion
 
         #region Inspector Variables
+
+        [SerializeField]
+        private InputView _inputView;
+
         #endregion
 
         #region Member Variables
@@ -25,17 +31,9 @@ namespace BlackJack.Presenter
 
         private void Start()
         {
-
+            SubscribeInput();
         }
 
-        private void Update()
-        {
-
-        }
-
-        #endregion
-
-        #region Enums
         #endregion
 
         #region Public Methods
@@ -44,6 +42,11 @@ namespace BlackJack.Presenter
         #region Private Methods
 
         private void SubscribeInput()
+        {
+            _inputView.ObservableGameStart.Subscribe(OnGameStart);
+        }
+
+        private void OnGameStart(int vetValue)
         {
 
         }
