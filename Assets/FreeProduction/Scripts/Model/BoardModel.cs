@@ -16,6 +16,12 @@ namespace BlackJack.Model
         #region Properties
 
         /// <summary>
+        /// 監視可能
+        /// アクションのボタンが選択できるようになるかどうかを検出できる
+        /// </summary>
+        public IObservable<bool> SetSelectAction => _setActiveSelectAction;
+
+        /// <summary>
         /// 最新のプレイヤーのカード
         /// 監視可能, プレイヤーの手札の更新時にイベントを発生する
         /// </summary>
@@ -94,6 +100,11 @@ namespace BlackJack.Model
 
         #region Events
 
+        /// <summary>
+        /// アクションのボタンが選択できるようになるかどうかを検出できる
+        /// </summary>
+        private Subject<bool> _setActiveSelectAction = new Subject<bool>();
+
         /// <summary>ボードの初期化の際に実行</summary>
         public event Action OnInitialize;
 
@@ -102,9 +113,6 @@ namespace BlackJack.Model
 
         /// <summary>ホールカードがめくられる際に呼び出される</summary>
         public event Action OnOpenHoleCard;
-
-        /// <summary>プレイヤーがアクションを選択できるようになった際に呼び出される</summary>
-        public event Action OnCanSelectAction;
 
         #endregion
 
@@ -134,9 +142,11 @@ namespace BlackJack.Model
         }
         
         [ContextMenu("EndAction")]
-        public void OnPlayerActionEnd()
+        public void EndAction()
         {
             if(IsStarted == false) return;
+
+            _setActiveSelectAction.OnNext(false);
 
             StartCoroutine(OnEndDrawing());
         }
@@ -146,12 +156,20 @@ namespace BlackJack.Model
         {
             if (IsStarted == false) return;
 
+            _setActiveSelectAction.OnNext(false);
+
             _playerHand.Add(CardStackModel.Instance.CurrentCard);
             _playerHandNum += _playerHand[_playerHandIndex].Num;
             _latestPlayerCard.Value = _playerHand[_playerHandIndex];
 
             Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}"+
                 $"\n現在の数字は{_playerHandNum}");
+
+            if(CheckBlackJack(_playerHandNum) == true)
+            {
+                EndAction();
+                return;
+            }
 
             if(CheckBust(_playerHandNum) == true)
             {
@@ -177,13 +195,19 @@ namespace BlackJack.Model
                 {
                     Debug.Log($"21を超えたがACE(11)が含まれていたためハンドの数字が変更された" +
                         $"\n現在の数字は{_playerHandNum}");
+
+                    _setActiveSelectAction.OnNext(true);
+
                     _playerHandIndex++;
                     return;
                 }
 
                 print("プレイヤーがバーストした プレイヤーの負け");
-                OnPlayerActionEnd();
+                EndAction();
             }
+
+            _setActiveSelectAction.OnNext(true);
+
             _playerHandIndex++;
         }
 
@@ -236,30 +260,14 @@ namespace BlackJack.Model
             DrawDealerCard(DealerCardType.Hole);
             OnOpenUpCard?.Invoke();
 
-            if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
-                && CheckBlackJack(_playerHandNum) == true)
+            if(CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
+                || CheckBlackJack(_playerHandNum) == true)
             {
-                OpenHoleCard();
-                print("両者がブラックジャック 引き分け");
-                Init();
-                yield break;
-            }
-            else if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true)
-            {
-                OpenHoleCard();
-                print("ディーラーがブラックジャック ディーラーの勝ち");
-                Init();
-                yield break;
-            }
-            else if (CheckBlackJack(_playerHandNum) == true)
-            {
-                OpenHoleCard();
-                print("プレイヤーがブラックジャック プレイヤーの勝ち");
-                Init();
+                JudgeBlackJack();
                 yield break;
             }
 
-            OnCanSelectAction?.Invoke();
+            _setActiveSelectAction.OnNext(true);
         }
 
         /// <summary>プレイヤーのアクションが終わった際のカードを引く処理</summary>
@@ -328,6 +336,29 @@ namespace BlackJack.Model
             }
         }
 
+        private void JudgeBlackJack()
+        {
+            if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
+                && CheckBlackJack(_playerHandNum) == true)
+            {
+                OpenHoleCard();
+                print("両者がブラックジャック 引き分け");
+                Init();
+            }
+            else if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true)
+            {
+                OpenHoleCard();
+                print("ディーラーがブラックジャック ディーラーの勝ち");
+                Init();
+            }
+            else if (CheckBlackJack(_playerHandNum) == true)
+            {
+                OpenHoleCard();
+                print("プレイヤーがブラックジャック プレイヤーの勝ち");
+                Init();
+            }
+        }
+
         /// <summary>
         /// ディーラーが伏せているカード(ホールカード)を公開する
         /// </summary>
@@ -368,6 +399,9 @@ namespace BlackJack.Model
         {
             // ゲーム進行に関する初期化
             IsStarted = false;
+
+            _setActiveSelectAction.Dispose();
+            _setActiveSelectAction = new Subject<bool>();
 
             // プレイヤーに関する初期化
             _latestPlayerCard.Dispose();
