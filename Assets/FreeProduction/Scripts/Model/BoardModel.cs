@@ -16,8 +16,8 @@ namespace BlackJack.Model
         #region Properties
 
         /// <summary>
+        /// アクションの選択ボタンの表示,非表示を管理するイベントを発行する
         /// 監視可能
-        /// アクションのボタンが選択できるようになるかどうかを検出できる
         /// </summary>
         public IObservable<bool> SetSelectAction => _setActiveSelectAction;
 
@@ -101,7 +101,7 @@ namespace BlackJack.Model
         #region Events
 
         /// <summary>
-        /// アクションのボタンが選択できるようになるかどうかを検出できる
+        /// アクションの選択ボタンの表示,非表示を管理するイベントを発行する
         /// </summary>
         private Subject<bool> _setActiveSelectAction = new Subject<bool>();
 
