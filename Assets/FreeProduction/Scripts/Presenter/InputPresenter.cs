@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BlackJack.View;
 using UniRx;
+using BlackJack.Model;
 
 namespace BlackJack.Presenter
 {
@@ -31,7 +32,7 @@ namespace BlackJack.Presenter
 
         private void Start()
         {
-            SubscribeInput();
+            Subscribe();
         }
 
         #endregion
@@ -41,14 +42,15 @@ namespace BlackJack.Presenter
 
         #region Private Methods
 
-        private void SubscribeInput()
+        private void Subscribe()
         {
             _inputView.ObservableGameStart.Subscribe(OnGameStart);
+            BoardModel.Instance.OnInitialize += () => _inputView.Init();
         }
 
         private void OnGameStart(int vetValue)
         {
-
+            BoardModel.Instance.StartGame();
         }
 
         #endregion
