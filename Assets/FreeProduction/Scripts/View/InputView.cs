@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using System;
+using System.Threading.Tasks;
 
 namespace BlackJack.View
 {
@@ -24,6 +25,10 @@ namespace BlackJack.View
         #endregion
 
         #region Inspector Variables
+
+        [SerializeField]
+        [Header("ゲーム終了後にボタンを押せるようになるまでの時間(ミリ秒)")]
+        private int _timeToSelectable = 3000;
 
         [SerializeField]
         private Button _startButton;
@@ -57,7 +62,7 @@ namespace BlackJack.View
 
         private void Start()
         {
-            SetUp();
+            SetUpInputEvent();
         }
 
         #endregion
@@ -66,21 +71,42 @@ namespace BlackJack.View
         #endregion
 
         #region Public Methods
+
+        /// <summary>ゲームの進行がリセットされた際に呼び出される</summary>
+        public async void Init()
+        {
+            await Task.Delay(_timeToSelectable);
+            // 初期化されたら入力可能にする
+            _betInput.interactable = true;
+            _startButton.interactable = true;
+        }
+
         #endregion
 
         #region Private Methods
 
-        private void SetUp()
+        private void SetUpInputEvent()
         {
+            _betInput.onEndEdit.AddListener(x =>
+            {
+                if(string.IsNullOrWhiteSpace(x) == false)
+                {
+                    SetBetValue(int.Parse(x));
+                }
+            });
+
             _startButton.onClick.AddListener(OnStartButton);
-            _betInput.onEndEdit.AddListener(x => SetBetValue(int.Parse(x)));
         }
 
         private void OnStartButton()
         {
             if (_betValue == 0) return;
+            
+            // スタート後はベット金額を入力不可能にする
+            _betInput.interactable = false;
+            _startButton.interactable = false;
+
             _onStartButton.OnNext(_betValue);
-            _betValue = 0;
         }
 
         private void SetBetValue(int value)
