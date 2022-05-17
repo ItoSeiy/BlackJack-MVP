@@ -45,9 +45,7 @@ namespace BlackJack.Presenter
             _inputView.ObservableHitButton.Subscribe(_ => OnHitButton());
             _inputView.ObservableStayButton.Subscribe(_ => OnStayButton());
 
-            BoardModel.Instance.SetSelectAction
-                .Skip(4)
-                .Subscribe(_inputView.SetActionButton);
+            SetSelectAction();
 
             BoardModel.Instance.OnInitialize += OnInit;
         }
@@ -56,6 +54,14 @@ namespace BlackJack.Presenter
         {
             _inputView.Init();
 
+            SetSelectAction();
+        }
+
+        /// <summary>
+        /// アクションの選択ボタンの表示,非表示を管理するイベントを購読する
+        /// </summary>
+        private void SetSelectAction()
+        {
             // 初回の2回は初回のドローなのでスキップする 
             // スキップ後はボタンを表示する
             BoardModel.Instance.SetSelectAction
