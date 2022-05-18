@@ -128,6 +128,20 @@ namespace BlackJack.Model
             Hole
         }
 
+        /// <summary>勝利方法</summary>
+        public enum ResultType
+        {
+            /// <summary>通常勝利</summary>
+            NormalWin,
+            /// <summary>ブラックジャックによる勝利</summary>
+            BlackJack,
+            /// <summary>引き分け</summary>
+            Draw,
+            /// <summary>負け</summary>
+            Lose,
+        }
+
+
         #endregion
 
         #region Public Methods
@@ -196,13 +210,20 @@ namespace BlackJack.Model
                     Debug.Log($"21を超えたがACE(11)が含まれていたためハンドの数字が変更された" +
                         $"\n現在の数字は{_playerHandNum}");
 
-                    _setActiveSelectAction.OnNext(true);
-
-                    _playerHandIndex++;
-                    return;
+                    if (CheckBlackJack(_playerHandNum) == true)
+                    {
+                        EndAction();
+                        return;
+                    }
+                    else
+                    {
+                        _setActiveSelectAction.OnNext(true);
+                        _playerHandIndex++;
+                        return; //バーストはしていない
+                    }
                 }
 
-                print("プレイヤーがバーストした プレイヤーの負け");
+                // ここまで来たらバースト
                 EndAction();
             }
 
@@ -301,20 +322,30 @@ namespace BlackJack.Model
             if (CheckBust(_dealerHandNum) == true
                 && CheckBust(_playerHandNum) == true)
             {
-                print("ディーラーがバーストした しかしプレイヤーはすでにバーストしている");
+                print("ディーラーがバーストした しかしプレイヤーはすでにバーストしている" +
+                    "\n プレイヤーの負け");
+
                 Init();
-                return;
-            }
-            else if (CheckBust(_dealerHandNum) == true)
-            {
-                print("ディーラーがバーストした プレイヤーの勝ち");
-                Init();
+                BetModel.Instance.ReturnBetValue(ResultType.Lose);
+
                 return;
             }
             else if (CheckBust(_playerHandNum) == true)
             {
                 print("ディーラはバーストしなかった ディーラーの勝ち");
+
                 Init();
+                BetModel.Instance.ReturnBetValue(ResultType.Lose);
+
+                return;
+            }
+            else if (CheckBust(_dealerHandNum) == true)
+            {
+                print("ディーラーがバーストした プレイヤーの勝ち");
+
+                Init();
+                BetModel.Instance.ReturnBetValue(ResultType.NormalWin);
+
                 return;
             }
 
@@ -322,17 +353,24 @@ namespace BlackJack.Model
             if (_playerHandNum > _dealerHandNum)
             {
                 print($"プレイヤーの勝ち\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
+
                 Init();
+
+                BetModel.Instance.ReturnBetValue(ResultType.NormalWin);
             }
             else if (_playerHandNum < _dealerHandNum)
             {
                 print($"ディーラーの勝ち\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
                 Init();
+
+                BetModel.Instance.ReturnBetValue(ResultType.Lose);
             }
             else
             {
                 print($"引き分け\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
                 Init();
+
+                BetModel.Instance.ReturnBetValue(ResultType.Draw);
             }
         }
 
@@ -341,20 +379,26 @@ namespace BlackJack.Model
             if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
                 && CheckBlackJack(_playerHandNum) == true)
             {
-                OpenHoleCard();
                 print("両者がブラックジャック 引き分け");
+
+                BetModel.Instance.ReturnBetValue(ResultType.Draw);
+                OpenHoleCard();
                 Init();
             }
             else if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true)
             {
-                OpenHoleCard();
                 print("ディーラーがブラックジャック ディーラーの勝ち");
+
+                BetModel.Instance.ReturnBetValue(ResultType.Lose);
+                OpenHoleCard();
                 Init();
             }
             else if (CheckBlackJack(_playerHandNum) == true)
             {
-                OpenHoleCard();
                 print("プレイヤーがブラックジャック プレイヤーの勝ち");
+
+                BetModel.Instance.ReturnBetValue(ResultType.BlackJack);
+                OpenHoleCard();
                 Init();
             }
         }
