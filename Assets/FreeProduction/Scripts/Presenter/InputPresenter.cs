@@ -4,25 +4,17 @@ using UnityEngine;
 using BlackJack.View;
 using UniRx;
 using BlackJack.Model;
+using BlackJack.Manager;
 
 namespace BlackJack.Presenter
 {
     public class InputPresenter : MonoBehaviour
     {
-        #region Properties
-        #endregion
-
         #region Inspector Variables
 
         [SerializeField]
         private InputView _inputView;
 
-        #endregion
-
-        #region Member Variables
-        #endregion
-
-        #region Events
         #endregion
 
         #region Unity Methods
@@ -34,9 +26,6 @@ namespace BlackJack.Presenter
 
         #endregion
 
-        #region Public Methods
-        #endregion
-
         #region Private Methods
 
         private void Subscribe()
@@ -45,9 +34,9 @@ namespace BlackJack.Presenter
             _inputView.ObservableHitButton.Subscribe(_ => OnHitButton());
             _inputView.ObservableStayButton.Subscribe(_ => OnStayButton());
 
-            SetSelectAction();
-
             BoardModel.Instance.OnInitialize += OnInit;
+
+            SetSelectAction();
         }
 
         private void OnInit()
@@ -55,7 +44,7 @@ namespace BlackJack.Presenter
             _inputView.Init();
 
             SetSelectAction();
-        }
+        }   
 
         /// <summary>
         /// アクションの選択ボタンの表示,非表示を管理するイベントを購読する
@@ -69,9 +58,14 @@ namespace BlackJack.Presenter
                 .Subscribe(_inputView.SetActionButton);
         }
 
-        private void OnGameStart(int vetValue)
+        private void OnGameStart(int betValue)
         {
             BoardModel.Instance.StartGame();
+
+            BetModel.Instance.SetBetValue(betValue);
+
+            CreditDataManager.Instance.UpdateCreditData
+                (new Data.CreditData(CreditDataManager.Instance.CreditData.Credit - betValue));
         }
 
         private void OnHitButton()
