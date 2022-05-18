@@ -70,9 +70,6 @@ namespace BlackJack.View
 
         #endregion
 
-        #region Constant
-        #endregion
-
         #region Events
 
         /// <summary>
