@@ -23,7 +23,7 @@ namespace BlackJack.Presenter
 
         #region Unity Methods
 
-        private void Start()
+        private void Awake()
         {
             Subscribe();
             SetUp();
@@ -45,6 +45,8 @@ namespace BlackJack.Presenter
             });
 
             BetModel.Instance.ObservableSetBetValue.Subscribe(x => _creditView.SetBetValue(x));
+
+            CreditDataManager.Instance.ObservableCreditDataChange.Subscribe(x => _creditView.SetCreditText(x));
         }
 
         private void SetUp()
