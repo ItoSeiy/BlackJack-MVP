@@ -6,6 +6,7 @@ using UniRx;
 using System;
 using System.Threading.Tasks;
 using DG.Tweening;
+using UniRx.Triggers;
 
 namespace BlackJack.View
 {
@@ -39,7 +40,11 @@ namespace BlackJack.View
 
         [SerializeField]
         [Header("ゲーム終了後にボタンを押せるようになるまでの時間(ミリ秒)")]
-        private int _timeToSelectable = 3000;
+        private int _timeToStartButtonSelectable = 3000;
+
+        [SerializeField]
+        [Header("アクションのボタンを選択後から推せるようになるまでの時間(ミリ秒)")]
+        private int _timeToSelectableActionButton = 800;
 
         [SerializeField]
         [Header("ベッティングの金額の入力")]
@@ -102,7 +107,7 @@ namespace BlackJack.View
         public async void Init()
         {
             SetActionButton(false);
-            await Task.Delay(_timeToSelectable);
+            await Task.Delay(_timeToStartButtonSelectable);
             // 初期化されたら入力可能にする
             _betInput.interactable = true;
             _startButton.interactable = true;
@@ -145,11 +150,30 @@ namespace BlackJack.View
                 }
             });
 
-            _startButton.onClick.AddListener(OnStartButton);
+            //_startButton.onClick.AddListener(OnStartButton);
 
-            _hitButton.onClick.AddListener(OnHitButton);
+            _startButton
+                .OnClickAsObservable()
+                .TakeUntilDestroy(this)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToStartButtonSelectable))
+                .Subscribe(_ => OnStartButton());
 
-            _stayButton.onClick.AddListener(OnStayButton);
+            //_hitButton.onClick.AddListener(OnHitButton);
+
+            _hitButton
+                .OnClickAsObservable()
+                .TakeUntilDestroy(this)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToStartButtonSelectable))
+                .Subscribe(_ => OnHitButton());
+
+            //_stayButton.onClick.AddListener(OnStayButton);
+
+            _stayButton
+                .OnClickAsObservable()
+                .TakeUntilDestroy(this)
+                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToStartButtonSelectable))
+                .Subscribe(_ => OnStayButton());
+
         }
 
         private void OnStartButton()
