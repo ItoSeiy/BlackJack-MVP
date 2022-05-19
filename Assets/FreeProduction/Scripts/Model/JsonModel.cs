@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System.IO;
-using System.Threading.Tasks;
+using UnityEditor;
+using UnityEngine;
 
 namespace BlackJack.Model
 {

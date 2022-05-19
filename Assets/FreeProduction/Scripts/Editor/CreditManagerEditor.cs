@@ -17,7 +17,7 @@ namespace BlackJack.Editor
 
             GUILayout.Space(5f);
 
-                EditorGUILayout.HelpBox("下の入力ボックスに値をいれてボタンを押すと所持金を調整できる", MessageType.Info);
+            EditorGUILayout.HelpBox("下の入力ボックスに値をいれてボタンを押すと所持金を調整できる", MessageType.Info);
 
             GUILayout.Space(5f);
 

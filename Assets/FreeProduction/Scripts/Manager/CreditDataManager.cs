@@ -1,9 +1,8 @@
 using BlackJack.Data;
-using UnityEngine;
-using System.Collections;
-using static BlackJack.Model.JsonModel;
-using UniRx;
 using System;
+using UniRx;
+using UnityEngine;
+using static BlackJack.Model.JsonModel;
 
 namespace BlackJack.Manager
 {
@@ -13,7 +12,7 @@ namespace BlackJack.Manager
     /// </summary>
     public class CreditDataManager : SingletonMonoBehaviour<CreditDataManager>
     {
-        public CreditData CreditData => _creditData;
+        public CreditData Data => _creditData;
 
         public IObservable<int> ObservableCreditDataChange => _onCreditDataChange;
 

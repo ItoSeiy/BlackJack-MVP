@@ -1,12 +1,11 @@
+using BlackJack.Manager;
+using DG.Tweening;
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx;
-using System;
-using System.Threading.Tasks;
-using DG.Tweening;
-using UniRx.Triggers;
 
 namespace BlackJack.View
 {
@@ -44,7 +43,14 @@ namespace BlackJack.View
 
         [SerializeField]
         [Header("アクションのボタンを選択後から推せるようになるまでの時間(ミリ秒)")]
-        private int _timeToSelectableActionButton = 800;
+        private int _timeToSelectableActionButton = 1000;
+
+        [SerializeField]
+        [Header("通知のテキストを出す秒数")]
+        private float _notificationDuration = 2;
+
+        [SerializeField]
+        private Text _notificationText;
 
         [SerializeField]
         [Header("ベッティングの金額の入力")]
@@ -98,9 +104,6 @@ namespace BlackJack.View
 
         #endregion
 
-        #region Enums
-        #endregion
-
         #region Public Methods
 
         /// <summary>ゲームの進行がリセットされた際に呼び出される</summary>
@@ -122,7 +125,7 @@ namespace BlackJack.View
         /// </param>
         public void SetActionButton(bool active)
         {
-            if(active == true)
+            if (active == true)
             {
                 _actionCanvasGroup.interactable = true;
                 _actionCanvasGroup.blocksRaycasts = true;
@@ -130,7 +133,7 @@ namespace BlackJack.View
             }
             else
             {
-                _actionCanvasGroup.interactable= false;
+                _actionCanvasGroup.interactable = false;
                 _actionCanvasGroup.blocksRaycasts = false;
                 _actionCanvasGroup.DOFade(0, _fadeDuration);
             }
@@ -144,42 +147,46 @@ namespace BlackJack.View
         {
             _betInput.onEndEdit.AddListener(x =>
             {
-                if(string.IsNullOrWhiteSpace(x) == false)
+                if (string.IsNullOrWhiteSpace(x) == false)
                 {
                     SetBetValue(int.Parse(x));
                 }
             });
 
-            //_startButton.onClick.AddListener(OnStartButton);
-
             _startButton
                 .OnClickAsObservable()
                 .TakeUntilDestroy(this)
-                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToStartButtonSelectable))
+                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToSelectableActionButton))
                 .Subscribe(_ => OnStartButton());
-
-            //_hitButton.onClick.AddListener(OnHitButton);
 
             _hitButton
                 .OnClickAsObservable()
                 .TakeUntilDestroy(this)
-                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToStartButtonSelectable))
+                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToSelectableActionButton))
                 .Subscribe(_ => OnHitButton());
-
-            //_stayButton.onClick.AddListener(OnStayButton);
 
             _stayButton
                 .OnClickAsObservable()
                 .TakeUntilDestroy(this)
-                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToStartButtonSelectable))
+                .ThrottleFirst(TimeSpan.FromMilliseconds(_timeToSelectableActionButton))
                 .Subscribe(_ => OnStayButton());
-
         }
 
         private void OnStartButton()
         {
-            if (_betValue == 0) return;
-            
+            if (_betValue <= 0)
+            {
+                StartCoroutine
+                    (OutputNotificationText("ベット金額を入力してください"));
+                return;
+            }
+            else if(CreditDataManager.Instance.Data.Credit < _betValue)
+            {
+                StartCoroutine
+                    (OutputNotificationText("所持金が足りません"));
+                return;
+            }
+
             // スタート後はベット金額を入力不可能にする
             _betInput.interactable = false;
             _startButton.interactable = false;
@@ -200,6 +207,13 @@ namespace BlackJack.View
         private void OnStayButton()
         {
             _onStayButton.OnNext("Stay");
+        }
+
+        private IEnumerator OutputNotificationText(object message)
+        {
+            _notificationText.text = message.ToString();
+            yield return new WaitForSeconds(_notificationDuration);
+            _notificationText.text = "";
         }
 
         #endregion

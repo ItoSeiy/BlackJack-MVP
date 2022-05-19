@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using BlackJack.View;
-using BlackJack.Model;
-using UniRx;
-using BlackJack.Manager;
 using BlackJack.Data;
+using BlackJack.Manager;
+using BlackJack.Model;
+using BlackJack.View;
+using UniRx;
+using UnityEngine;
 
 namespace BlackJack.Presenter
 {
@@ -31,7 +29,7 @@ namespace BlackJack.Presenter
         }
 
         #endregion
-
+        
         #region Private Methods
 
         private void Subscribe()
@@ -41,7 +39,7 @@ namespace BlackJack.Presenter
                 _creditView.SetWinBetText(x);
 
                 CreditDataManager.Instance.UpdateCreditData
-                    (new CreditData(CreditDataManager.Instance.CreditData.Credit + x));
+                    (new CreditData(CreditDataManager.Instance.Data.Credit + x));
             });
 
             BetModel.Instance.ObservableSetBetValue.Subscribe(x => _creditView.SetBetValue(x));
@@ -51,7 +49,7 @@ namespace BlackJack.Presenter
 
         private void SetUp()
         {
-            _creditView.SetCreditText(CreditDataManager.Instance.CreditData.Credit);
+            _creditView.SetCreditText(CreditDataManager.Instance.Data.Credit);
             _creditView.Init();
         }
 

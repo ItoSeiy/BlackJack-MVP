@@ -154,13 +154,11 @@ namespace BlackJack.Model
             IsStarted = true;
             StartCoroutine(OnStartDrawing());
         }
-        
+
         [ContextMenu("EndAction")]
         public void EndAction()
         {
-            if(IsStarted == false) return;
-
-            _setActiveSelectAction.OnNext(false);
+            if (IsStarted == false) return;
 
             StartCoroutine(OnEndDrawing());
         }
@@ -176,16 +174,16 @@ namespace BlackJack.Model
             _playerHandNum += _playerHand[_playerHandIndex].Num;
             _latestPlayerCard.Value = _playerHand[_playerHandIndex];
 
-            Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}"+
+            Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}" +
                 $"\n現在の数字は{_playerHandNum}");
 
-            if(CheckBlackJack(_playerHandNum) == true)
+            if (CheckBlackJack(_playerHandNum) == true)
             {
                 EndAction();
                 return;
             }
 
-            if(CheckBust(_playerHandNum) == true)
+            if (CheckBust(_playerHandNum) == true)
             {
                 bool existsA11 = false;
 
@@ -193,7 +191,7 @@ namespace BlackJack.Model
                 {
                     // バーストした際にカードにACE(11)が含まれていたらACE(1)として返す
                     // ※ACEはソフトハンドと呼ばれて11とも1とも認識できる
-                    if(x.Rank == CardData.RankType.A11)
+                    if (x.Rank == CardData.RankType.A11)
                     {
                         existsA11 = true;
                         _playerHandNum -= ACE_CARD_OFFSET;
@@ -205,7 +203,7 @@ namespace BlackJack.Model
                     }
                 }).ToList();
 
-                if(existsA11 == true)
+                if (existsA11 == true)
                 {
                     Debug.Log($"21を超えたがACE(11)が含まれていたためハンドの数字が変更された" +
                         $"\n現在の数字は{_playerHandNum}");
@@ -281,7 +279,7 @@ namespace BlackJack.Model
             DrawDealerCard(DealerCardType.Hole);
             OnOpenUpCard?.Invoke();
 
-            if(CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
+            if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
                 || CheckBlackJack(_playerHandNum) == true)
             {
                 JudgeBlackJack();
@@ -294,6 +292,7 @@ namespace BlackJack.Model
         /// <summary>プレイヤーのアクションが終わった際のカードを引く処理</summary>
         IEnumerator OnEndDrawing()
         {
+            _setActiveSelectAction.OnNext(false);
             yield return new WaitForSeconds(_drawDuration);
 
             OpenHoleCard();
@@ -416,7 +415,7 @@ namespace BlackJack.Model
 
         private bool CheckBlackJack(int num)
         {
-            if(num == BLACKJACK_NUM)
+            if (num == BLACKJACK_NUM)
             {
                 return true;
             }
@@ -428,7 +427,7 @@ namespace BlackJack.Model
 
         private bool CheckBust(int num)
         {
-            if(num >= BUST_NUM)
+            if (num >= BUST_NUM)
             {
                 return true;
             }
