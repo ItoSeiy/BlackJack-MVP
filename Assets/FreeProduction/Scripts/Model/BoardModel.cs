@@ -9,37 +9,37 @@ using UniRx;
 namespace BlackJack.Model
 {
     /// <summary>
-    /// ƒvƒŒƒCƒ„[‚âƒfƒB[ƒ‰‚ÌèD‚ğŠÇ—‚·‚éƒNƒ‰ƒX(ƒ‚ƒfƒ‹)
+    /// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚„ãƒ‡ã‚£ãƒ¼ãƒ©ã®æ‰‹æœ­ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹(ãƒ¢ãƒ‡ãƒ«)
     /// </summary>
     public class BoardModel : SingletonMonoBehaviour<BoardModel>
     {
         #region Properties
 
         /// <summary>
-        /// ƒAƒNƒVƒ‡ƒ“‚Ì‘I‘ğƒ{ƒ^ƒ“‚Ì•\¦,”ñ•\¦‚ğŠÇ—‚·‚éƒCƒxƒ“ƒg‚ğ”­s‚·‚é
-        /// ŠÄ‹‰Â”\
+        /// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®é¸æŠãƒœã‚¿ãƒ³ã®è¡¨ç¤º,éè¡¨ç¤ºã‚’ç®¡ç†ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºè¡Œã™ã‚‹
+        /// ç›£è¦–å¯èƒ½
         /// </summary>
         public IObservable<bool> SetSelectAction => _setActiveSelectAction;
 
         /// <summary>
-        /// ÅV‚ÌƒvƒŒƒCƒ„[‚ÌƒJ[ƒh
-        /// ŠÄ‹‰Â”\, ƒvƒŒƒCƒ„[‚ÌèD‚ÌXV‚ÉƒCƒxƒ“ƒg‚ğ”­¶‚·‚é
+        /// æœ€æ–°ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚«ãƒ¼ãƒ‰
+        /// ç›£è¦–å¯èƒ½, ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰‹æœ­ã®æ›´æ–°æ™‚ã«ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºç”Ÿã™ã‚‹
         /// </summary>
         public IObservable<CardData> ObservableLatestPlayerCard => _latestPlayerCard;
 
         public int PlayerCardNum => _playerHandNum;
 
         /// <summary>
-        /// ÅV‚ÌƒvƒŒƒCƒ„[‚ÌƒJ[ƒh
-        /// ŠÄ‹‰Â”\, ƒfƒB[ƒ‰[‚ÌèD‚ÌXV‚ÉƒCƒxƒ“ƒg‚ğ”­¶‚·‚é
+        /// æœ€æ–°ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚«ãƒ¼ãƒ‰
+        /// ç›£è¦–å¯èƒ½, ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã®æ‰‹æœ­ã®æ›´æ–°æ™‚ã«ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºç”Ÿã™ã‚‹
         /// </summary>
         public IObservable<CardData> ObservableLatestDealerCard => _latestDealerCard;
 
         public int DealerCardNum => _dealerHandNum;
 
         /// <summary>
-        /// ƒuƒ‰ƒbƒNƒWƒƒƒbƒN‚ªŠJn‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
-        /// true -> ŠJn
+        /// ãƒ–ãƒ©ãƒƒã‚¯ã‚¸ãƒ£ãƒƒã‚¯ãŒé–‹å§‹ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
+        /// true -> é–‹å§‹
         /// </summary>
         public bool IsStarted { get; private set; } = false;
 
@@ -48,52 +48,52 @@ namespace BlackJack.Model
         #region Inspector Variables
 
         [SerializeField]
-        [Header("ƒJ[ƒh‚ğˆø‚­‘¬“x‚ÌŠÔŠu")]
+        [Header("ã‚«ãƒ¼ãƒ‰ã‚’å¼•ãé€Ÿåº¦ã®é–“éš”")]
         private float _drawDuration = 1f;
 
         #endregion
 
         #region Member Variables
 
-        /// <summary>ÅV‚ÌƒvƒŒƒCƒ„[‚ÌƒJ[ƒh</summary>
+        /// <summary>æœ€æ–°ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚«ãƒ¼ãƒ‰</summary>
         private ReactiveProperty<CardData> _latestPlayerCard = new ReactiveProperty<CardData>();
 
-        /// <summary>ƒvƒŒƒCƒ„[‚ÌèD</summary>
+        /// <summary>ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ‰‹æœ­</summary>
         private List<CardData> _playerHand = new List<CardData>();
 
         private int _playerHandIndex = 0;
 
-        /// <summary>ƒvƒŒƒCƒ„[‚Ì”š</summary>
+        /// <summary>ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ•°å­—</summary>
         private int _playerHandNum = 0;
 
-        /// <summary>ÅV‚ÌƒfƒB[ƒ‰[‚ÌƒJ[ƒh</summary>
+        /// <summary>æœ€æ–°ã®ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã®ã‚«ãƒ¼ãƒ‰</summary>
         private ReactiveProperty<CardData> _latestDealerCard = new ReactiveProperty<CardData>();
 
-        /// <summary>ƒfƒB[ƒ‰[‚ÌèD</summary>
+        /// <summary>ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã®æ‰‹æœ­</summary>
         private List<CardData> _dealerHand = new List<CardData>();
 
         private int _dealerHandIndex = 0;
 
-        /// <summary>ƒfƒB[ƒ‰[‚ÌèD‚Ì”š</summary>
+        /// <summary>ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã®æ‰‹æœ­ã®æ•°å­—</summary>
         private int _dealerHandNum = 0;
 
-        /// <summary>ƒfƒB[ƒ‰[‚Ì•š‚¹‚Ä‚¢‚éƒJ[ƒh‚Ì”š</summary>
+        /// <summary>ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã®ä¼ã›ã¦ã„ã‚‹ã‚«ãƒ¼ãƒ‰ã®æ•°å­—</summary>
         private int _dealerHoleHandNum = 0;
 
         #endregion
 
         #region Constant
 
-        /// <summary>‚±‚ê”š‚É‚È‚é‚Æƒo[ƒXƒgˆµ‚¢‚É‚È‚é”š</summary>
+        /// <summary>ã“ã‚Œæ•°å­—ã«ãªã‚‹ã¨ãƒãƒ¼ã‚¹ãƒˆæ‰±ã„ã«ãªã‚‹æ•°å­—</summary>
         private const int BUST_NUM = 22;
 
-        /// <summary>ƒuƒ‰ƒbƒNƒWƒƒƒbƒNˆµ‚¢‚É‚È‚é”š</summary>
+        /// <summary>ãƒ–ãƒ©ãƒƒã‚¯ã‚¸ãƒ£ãƒƒã‚¯æ‰±ã„ã«ãªã‚‹æ•°å­—</summary>
         private const int BLACKJACK_NUM = 21;
 
-        /// <summary>ƒfƒB[ƒ‰[‚ªƒgƒ‰ƒ“ƒv‚ğ‚±‚Ì”šˆÈã‚É‚È‚é‚Ü‚Å‚Éˆø‚«‘±‚¯‚é</summary>
+        /// <summary>ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ãŒãƒˆãƒ©ãƒ³ãƒ—ã‚’ã“ã®æ•°å­—ä»¥ä¸Šã«ãªã‚‹ã¾ã§ã«å¼•ãç¶šã‘ã‚‹</summary>
         private const int DEALER_DRAWING_HAND_LIMIT = 17;
 
-        /// <summary>‰Â•Ï‚Å‚ ‚éƒgƒ‰ƒ“ƒvuACEv‚Ì‚»‚ê‚¼‚ê‚Ì”š‚Ì·</summary>
+        /// <summary>å¯å¤‰ã§ã‚ã‚‹ãƒˆãƒ©ãƒ³ãƒ—ã€ŒACEã€ã®ãã‚Œãã‚Œã®æ•°å­—ã®å·®</summary>
         private const int ACE_CARD_OFFSET = 10;
 
         #endregion
@@ -101,17 +101,17 @@ namespace BlackJack.Model
         #region Events
 
         /// <summary>
-        /// ƒAƒNƒVƒ‡ƒ“‚Ì‘I‘ğƒ{ƒ^ƒ“‚Ì•\¦,”ñ•\¦‚ğŠÇ—‚·‚éƒCƒxƒ“ƒg‚ğ”­s‚·‚é
+        /// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®é¸æŠãƒœã‚¿ãƒ³ã®è¡¨ç¤º,éè¡¨ç¤ºã‚’ç®¡ç†ã™ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºè¡Œã™ã‚‹
         /// </summary>
         private Subject<bool> _setActiveSelectAction = new Subject<bool>();
 
-        /// <summary>ƒ{[ƒh‚Ì‰Šú‰»‚ÌÛ‚ÉÀs</summary>
+        /// <summary>ãƒœãƒ¼ãƒ‰ã®åˆæœŸåŒ–ã®éš›ã«å®Ÿè¡Œ</summary>
         public event Action OnInitialize;
 
-        /// <summary>ƒAƒbƒvƒJ[ƒh‚ª‚ß‚­‚ç‚ê‚éÛ‚ÉŒÄ‚Ño‚³‚ê‚é</summary>
+        /// <summary>ã‚¢ãƒƒãƒ—ã‚«ãƒ¼ãƒ‰ãŒã‚ãã‚‰ã‚Œã‚‹éš›ã«å‘¼ã³å‡ºã•ã‚Œã‚‹</summary>
         public event Action OnOpenUpCard;
 
-        /// <summary>ƒz[ƒ‹ƒJ[ƒh‚ª‚ß‚­‚ç‚ê‚éÛ‚ÉŒÄ‚Ño‚³‚ê‚é</summary>
+        /// <summary>ãƒ›ãƒ¼ãƒ«ã‚«ãƒ¼ãƒ‰ãŒã‚ãã‚‰ã‚Œã‚‹éš›ã«å‘¼ã³å‡ºã•ã‚Œã‚‹</summary>
         public event Action OnOpenHoleCard;
 
         #endregion
@@ -122,22 +122,22 @@ namespace BlackJack.Model
 
         public enum DealerCardType
         {
-            /// <summary>•\Œü‚«‚Ìƒgƒ‰ƒ“ƒv</summary>
+            /// <summary>è¡¨å‘ãã®ãƒˆãƒ©ãƒ³ãƒ—</summary>
             Up,
-            /// <summary>•š‚¹‚Ä‚¢‚éƒgƒ‰ƒ“ƒv</summary>
+            /// <summary>ä¼ã›ã¦ã„ã‚‹ãƒˆãƒ©ãƒ³ãƒ—</summary>
             Hole
         }
 
-        /// <summary>Ÿ—˜•û–@</summary>
+        /// <summary>å‹åˆ©æ–¹æ³•</summary>
         public enum ResultType
         {
-            /// <summary>’ÊíŸ—˜</summary>
+            /// <summary>é€šå¸¸å‹åˆ©</summary>
             NormalWin,
-            /// <summary>ƒuƒ‰ƒbƒNƒWƒƒƒbƒN‚É‚æ‚éŸ—˜</summary>
+            /// <summary>ãƒ–ãƒ©ãƒƒã‚¯ã‚¸ãƒ£ãƒƒã‚¯ã«ã‚ˆã‚‹å‹åˆ©</summary>
             BlackJack,
-            /// <summary>ˆø‚«•ª‚¯</summary>
+            /// <summary>å¼•ãåˆ†ã‘</summary>
             Draw,
-            /// <summary>•‰‚¯</summary>
+            /// <summary>è² ã‘</summary>
             Lose,
         }
 
@@ -174,8 +174,8 @@ namespace BlackJack.Model
             _playerHandNum += _playerHand[_playerHandIndex].Num;
             _latestPlayerCard.Value = _playerHand[_playerHandIndex];
 
-            Debug.Log($"ƒvƒŒƒCƒ„[‚ªƒJ[ƒh‚ğˆø‚¢‚½ ˆø‚¢‚½”š‚Í{_playerHand[_playerHandIndex].Num}" +
-                $"\nŒ»İ‚Ì”š‚Í{_playerHandNum}");
+            Debug.Log($"ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã‚«ãƒ¼ãƒ‰ã‚’å¼•ã„ãŸ å¼•ã„ãŸæ•°å­—ã¯{_playerHand[_playerHandIndex].Num}" +
+                $"\nç¾åœ¨ã®æ•°å­—ã¯{_playerHandNum}");
 
             if (CheckBlackJack(_playerHandNum) == true)
             {
@@ -189,8 +189,8 @@ namespace BlackJack.Model
 
                 _playerHand = _playerHand.Select(x =>
                 {
-                    // ƒo[ƒXƒg‚µ‚½Û‚ÉƒJ[ƒh‚ÉACE(11)‚ªŠÜ‚Ü‚ê‚Ä‚¢‚½‚çACE(1)‚Æ‚µ‚Ä•Ô‚·
-                    // ¦ACE‚Íƒ\ƒtƒgƒnƒ“ƒh‚ÆŒÄ‚Î‚ê‚Ä11‚Æ‚à1‚Æ‚à”F¯‚Å‚«‚é
+                    // ãƒãƒ¼ã‚¹ãƒˆã—ãŸéš›ã«ã‚«ãƒ¼ãƒ‰ã«ACE(11)ãŒå«ã¾ã‚Œã¦ã„ãŸã‚‰ACE(1)ã¨ã—ã¦è¿”ã™
+                    // â€»ACEã¯ã‚½ãƒ•ãƒˆãƒãƒ³ãƒ‰ã¨å‘¼ã°ã‚Œã¦11ã¨ã‚‚1ã¨ã‚‚èªè­˜ã§ãã‚‹
                     if (x.Rank == CardData.RankType.A11)
                     {
                         existsA11 = true;
@@ -205,8 +205,8 @@ namespace BlackJack.Model
 
                 if (existsA11 == true)
                 {
-                    Debug.Log($"21‚ğ’´‚¦‚½‚ªACE(11)‚ªŠÜ‚Ü‚ê‚Ä‚¢‚½‚½‚ßƒnƒ“ƒh‚Ì”š‚ª•ÏX‚³‚ê‚½" +
-                        $"\nŒ»İ‚Ì”š‚Í{_playerHandNum}");
+                    Debug.Log($"21ã‚’è¶…ãˆãŸãŒACE(11)ãŒå«ã¾ã‚Œã¦ã„ãŸãŸã‚ãƒãƒ³ãƒ‰ã®æ•°å­—ãŒå¤‰æ›´ã•ã‚ŒãŸ" +
+                        $"\nç¾åœ¨ã®æ•°å­—ã¯{_playerHandNum}");
 
                     if (CheckBlackJack(_playerHandNum) == true)
                     {
@@ -217,12 +217,14 @@ namespace BlackJack.Model
                     {
                         _setActiveSelectAction.OnNext(true);
                         _playerHandIndex++;
-                        return; //ƒo[ƒXƒg‚Í‚µ‚Ä‚¢‚È‚¢
+                        return; //ãƒãƒ¼ã‚¹ãƒˆã¯ã—ã¦ã„ãªã„
                     }
                 }
 
-                // ‚±‚±‚Ü‚Å—ˆ‚½‚çƒo[ƒXƒg
+                // ã“ã“ã¾ã§æ¥ãŸã‚‰ãƒãƒ¼ã‚¹ãƒˆ
                 EndAction();
+                _playerHandIndex++;
+                return;
             }
 
             _setActiveSelectAction.OnNext(true);
@@ -255,13 +257,13 @@ namespace BlackJack.Model
 
             _latestDealerCard.Value = _dealerHand[_dealerHandIndex];
 
-            Debug.Log($"ƒfƒB[ƒ‰[‚ªƒJ[ƒh‚ğˆø‚¢‚½ ˆø‚¢‚½”š‚Í{_dealerHand[_dealerHandIndex].Num}" +
-                $"\nŒ»İ‚ÌƒAƒbƒvƒJ[ƒh‚Í{_dealerHandNum}ƒz[ƒ‹ƒJ[ƒh‚Í{_dealerHoleHandNum}");
+            Debug.Log($"ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ãŒã‚«ãƒ¼ãƒ‰ã‚’å¼•ã„ãŸ å¼•ã„ãŸæ•°å­—ã¯{_dealerHand[_dealerHandIndex].Num}" +
+                $"\nç¾åœ¨ã®ã‚¢ãƒƒãƒ—ã‚«ãƒ¼ãƒ‰ã¯{_dealerHandNum}ãƒ›ãƒ¼ãƒ«ã‚«ãƒ¼ãƒ‰ã¯{_dealerHoleHandNum}");
 
             _dealerHandIndex++;
         }
 
-        /// <summary>ƒQ[ƒ€ƒXƒ^[ƒg‚ÌƒJ[ƒh‚ğˆø‚­ˆ—</summary>
+        /// <summary>ã‚²ãƒ¼ãƒ ã‚¹ã‚¿ãƒ¼ãƒˆæ™‚ã®ã‚«ãƒ¼ãƒ‰ã‚’å¼•ãå‡¦ç†</summary>
         IEnumerator OnStartDrawing()
         {
             DrawPlayerCard();
@@ -289,7 +291,7 @@ namespace BlackJack.Model
             _setActiveSelectAction.OnNext(true);
         }
 
-        /// <summary>ƒvƒŒƒCƒ„[‚ÌƒAƒNƒVƒ‡ƒ“‚ªI‚í‚Á‚½Û‚ÌƒJ[ƒh‚ğˆø‚­ˆ—</summary>
+        /// <summary>ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ãŒçµ‚ã‚ã£ãŸéš›ã®ã‚«ãƒ¼ãƒ‰ã‚’å¼•ãå‡¦ç†</summary>
         IEnumerator OnEndDrawing()
         {
             _setActiveSelectAction.OnNext(false);
@@ -297,14 +299,14 @@ namespace BlackJack.Model
 
             OpenHoleCard();
 
-            // ƒfƒB[ƒ‰[‚Íƒnƒ“ƒh‚ª17ˆÈã‚É‚È‚é‚Ü‚Åˆø‚«‘±‚¯‚é
+            // ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã¯ãƒãƒ³ãƒ‰ãŒ17ä»¥ä¸Šã«ãªã‚‹ã¾ã§å¼•ãç¶šã‘ã‚‹
             while (_dealerHandNum < DEALER_DRAWING_HAND_LIMIT)
             {
                 yield return new WaitForSeconds(_drawDuration);
                 DrawDealerCard(DealerCardType.Up);
             }
 
-            // ƒfƒB[ƒ‰‚ªƒnƒ“ƒh‚ğˆø‚«I‚¦‚½‚çÅI“I‚ÈŸ”s‚Ì”»•Ê‚ğs‚¤
+            // ãƒ‡ã‚£ãƒ¼ãƒ©ãŒãƒãƒ³ãƒ‰ã‚’å¼•ãçµ‚ãˆãŸã‚‰æœ€çµ‚çš„ãªå‹æ•—ã®åˆ¤åˆ¥ã‚’è¡Œã†
             if (_dealerHandNum >= DEALER_DRAWING_HAND_LIMIT)
             {
                 yield return new WaitForSeconds(_drawDuration);
@@ -313,16 +315,16 @@ namespace BlackJack.Model
         }
 
         /// <summary>
-        /// ÅI“I‚ÈŸ”s‚Ì”»•Ê‚ğs‚¤
+        /// æœ€çµ‚çš„ãªå‹æ•—ã®åˆ¤åˆ¥ã‚’è¡Œã†
         /// </summary>
         private void Judge()
         {
-            // ƒo[ƒXƒg‚Ìó‹µ‚ğŠm”F‚µ‚ÄŸ‚¿•‰‚¯‚ğŠm’è‚³‚¹‚é
+            // ãƒãƒ¼ã‚¹ãƒˆã®çŠ¶æ³ã‚’ç¢ºèªã—ã¦å‹ã¡è² ã‘ã‚’ç¢ºå®šã•ã›ã‚‹
             if (CheckBust(_dealerHandNum) == true
                 && CheckBust(_playerHandNum) == true)
             {
-                print("ƒfƒB[ƒ‰[‚ªƒo[ƒXƒg‚µ‚½ ‚µ‚©‚µƒvƒŒƒCƒ„[‚Í‚·‚Å‚Éƒo[ƒXƒg‚µ‚Ä‚¢‚é" +
-                    "\n ƒvƒŒƒCƒ„[‚Ì•‰‚¯");
+                print("ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ãŒãƒãƒ¼ã‚¹ãƒˆã—ãŸ ã—ã‹ã—ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¯ã™ã§ã«ãƒãƒ¼ã‚¹ãƒˆã—ã¦ã„ã‚‹" +
+                    "\n ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è² ã‘");
 
                 Init();
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
@@ -331,7 +333,7 @@ namespace BlackJack.Model
             }
             else if (CheckBust(_playerHandNum) == true)
             {
-                print("ƒfƒB[ƒ‰‚Íƒo[ƒXƒg‚µ‚È‚©‚Á‚½ ƒfƒB[ƒ‰[‚ÌŸ‚¿");
+                print("ãƒ‡ã‚£ãƒ¼ãƒ©ã¯ãƒãƒ¼ã‚¹ãƒˆã—ãªã‹ã£ãŸ ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã®å‹ã¡");
 
                 Init();
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
@@ -340,7 +342,7 @@ namespace BlackJack.Model
             }
             else if (CheckBust(_dealerHandNum) == true)
             {
-                print("ƒfƒB[ƒ‰[‚ªƒo[ƒXƒg‚µ‚½ ƒvƒŒƒCƒ„[‚ÌŸ‚¿");
+                print("ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ãŒãƒãƒ¼ã‚¹ãƒˆã—ãŸ ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‹ã¡");
 
                 Init();
                 BetModel.Instance.ReturnBetValue(ResultType.NormalWin);
@@ -348,10 +350,10 @@ namespace BlackJack.Model
                 return;
             }
 
-            // —¼Òƒo[ƒXƒg‚µ‚Ä‚¢‚È‚©‚Á‚½‚ç”š‚ÅŸ”s‚ğŠm’è‚³‚¹‚é
+            // ä¸¡è€…ãƒãƒ¼ã‚¹ãƒˆã—ã¦ã„ãªã‹ã£ãŸã‚‰æ•°å­—ã§å‹æ•—ã‚’ç¢ºå®šã•ã›ã‚‹
             if (_playerHandNum > _dealerHandNum)
             {
-                print($"ƒvƒŒƒCƒ„[‚ÌŸ‚¿\nƒvƒŒƒCƒ„[{_playerHandNum} ƒfƒB[ƒ‰[{_dealerHandNum}");
+                print($"ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‹ã¡\nãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼{_playerHandNum} ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼{_dealerHandNum}");
 
                 Init();
 
@@ -359,14 +361,14 @@ namespace BlackJack.Model
             }
             else if (_playerHandNum < _dealerHandNum)
             {
-                print($"ƒfƒB[ƒ‰[‚ÌŸ‚¿\nƒvƒŒƒCƒ„[{_playerHandNum} ƒfƒB[ƒ‰[{_dealerHandNum}");
+                print($"ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã®å‹ã¡\nãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼{_playerHandNum} ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼{_dealerHandNum}");
                 Init();
 
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
             }
             else
             {
-                print($"ˆø‚«•ª‚¯\nƒvƒŒƒCƒ„[{_playerHandNum} ƒfƒB[ƒ‰[{_dealerHandNum}");
+                print($"å¼•ãåˆ†ã‘\nãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼{_playerHandNum} ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼{_dealerHandNum}");
                 Init();
 
                 BetModel.Instance.ReturnBetValue(ResultType.Draw);
@@ -378,7 +380,7 @@ namespace BlackJack.Model
             if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
                 && CheckBlackJack(_playerHandNum) == true)
             {
-                print("—¼Ò‚ªƒuƒ‰ƒbƒNƒWƒƒƒbƒN ˆø‚«•ª‚¯");
+                print("ä¸¡è€…ãŒãƒ–ãƒ©ãƒƒã‚¯ã‚¸ãƒ£ãƒƒã‚¯ å¼•ãåˆ†ã‘");
 
                 OpenHoleCard();
                 Init();
@@ -386,7 +388,7 @@ namespace BlackJack.Model
             }
             else if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true)
             {
-                print("ƒfƒB[ƒ‰[‚ªƒuƒ‰ƒbƒNƒWƒƒƒbƒN ƒfƒB[ƒ‰[‚ÌŸ‚¿");
+                print("ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ãŒãƒ–ãƒ©ãƒƒã‚¯ã‚¸ãƒ£ãƒƒã‚¯ ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã®å‹ã¡");
 
                 OpenHoleCard();
                 Init();
@@ -394,7 +396,7 @@ namespace BlackJack.Model
             }
             else if (CheckBlackJack(_playerHandNum) == true)
             {
-                print("ƒvƒŒƒCƒ„[‚ªƒuƒ‰ƒbƒNƒWƒƒƒbƒN ƒvƒŒƒCƒ„[‚ÌŸ‚¿");
+                print("ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒãƒ–ãƒ©ãƒƒã‚¯ã‚¸ãƒ£ãƒƒã‚¯ ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‹ã¡");
 
                 OpenHoleCard();
                 Init();
@@ -403,14 +405,14 @@ namespace BlackJack.Model
         }
 
         /// <summary>
-        /// ƒfƒB[ƒ‰[‚ª•š‚¹‚Ä‚¢‚éƒJ[ƒh(ƒz[ƒ‹ƒJ[ƒh)‚ğŒöŠJ‚·‚é
+        /// ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ãŒä¼ã›ã¦ã„ã‚‹ã‚«ãƒ¼ãƒ‰(ãƒ›ãƒ¼ãƒ«ã‚«ãƒ¼ãƒ‰)ã‚’å…¬é–‹ã™ã‚‹
         /// </summary>
         private void OpenHoleCard()
         {
             _dealerHandNum += _dealerHoleHandNum;
             _dealerHoleHandNum = 0;
             OnOpenHoleCard?.Invoke();
-            print($"ƒfƒB[ƒ‰[‚ªƒz[ƒ‹ƒJ[ƒh‚ğŒöŠJ‚µ‚½\nŒ»İ‚Ì”š‚Í{_dealerHandNum}");
+            print($"ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ãŒãƒ›ãƒ¼ãƒ«ã‚«ãƒ¼ãƒ‰ã‚’å…¬é–‹ã—ãŸ\nç¾åœ¨ã®æ•°å­—ã¯{_dealerHandNum}");
         }
 
         private bool CheckBlackJack(int num)
@@ -440,13 +442,13 @@ namespace BlackJack.Model
 
         private void Init()
         {
-            // ƒQ[ƒ€is‚ÉŠÖ‚·‚é‰Šú‰»
+            // ã‚²ãƒ¼ãƒ é€²è¡Œã«é–¢ã™ã‚‹åˆæœŸåŒ–
             IsStarted = false;
 
             _setActiveSelectAction.Dispose();
             _setActiveSelectAction = new Subject<bool>();
 
-            // ƒvƒŒƒCƒ„[‚ÉŠÖ‚·‚é‰Šú‰»
+            // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«é–¢ã™ã‚‹åˆæœŸåŒ–
             _latestPlayerCard.Dispose();
             _latestPlayerCard = new ReactiveProperty<CardData>();
 
@@ -455,7 +457,7 @@ namespace BlackJack.Model
             _playerHandIndex = 0;
 
 
-            // ƒfƒB[ƒ‰[‚ÉŠÖ‚·‚é‰Šú‰»
+            // ãƒ‡ã‚£ãƒ¼ãƒ©ãƒ¼ã«é–¢ã™ã‚‹åˆæœŸåŒ–
             _latestDealerCard.Dispose();
             _latestDealerCard = new ReactiveProperty<CardData>();
 
