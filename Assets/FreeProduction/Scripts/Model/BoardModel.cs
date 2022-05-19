@@ -381,25 +381,25 @@ namespace BlackJack.Model
             {
                 print("両者がブラックジャック 引き分け");
 
-                BetModel.Instance.ReturnBetValue(ResultType.Draw);
                 OpenHoleCard();
                 Init();
+                BetModel.Instance.ReturnBetValue(ResultType.Draw);
             }
             else if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true)
             {
                 print("ディーラーがブラックジャック ディーラーの勝ち");
 
-                BetModel.Instance.ReturnBetValue(ResultType.Lose);
                 OpenHoleCard();
                 Init();
+                BetModel.Instance.ReturnBetValue(ResultType.Lose);
             }
             else if (CheckBlackJack(_playerHandNum) == true)
             {
                 print("プレイヤーがブラックジャック プレイヤーの勝ち");
 
-                BetModel.Instance.ReturnBetValue(ResultType.BlackJack);
                 OpenHoleCard();
                 Init();
+                BetModel.Instance.ReturnBetValue(ResultType.BlackJack);
             }
         }
 
