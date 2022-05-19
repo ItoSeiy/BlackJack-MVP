@@ -2,6 +2,8 @@ using BlackJack.Data;
 using UnityEngine;
 using System.Collections;
 using static BlackJack.Model.JsonModel;
+using UniRx;
+using System;
 
 namespace BlackJack.Manager
 {
@@ -13,10 +15,14 @@ namespace BlackJack.Manager
     {
         public CreditData CreditData => _creditData;
 
+        public IObservable<int> ObservableCreditDataChange => _onCreditDataChange;
+
         [SerializeField]
         private string _inGameSceneName = "Main";
 
         private CreditData _creditData;
+
+        private Subject<int> _onCreditDataChange = new Subject<int>();
 
         private const string SAVE_DATA_PATH_FOR_LOAD = "Data/CreditData";
 
@@ -25,8 +31,6 @@ namespace BlackJack.Manager
         protected override void Awake()
         {
             base.Awake();
-
-            SAVE_DATA_PATH_FOR_CREATE = Application.dataPath + "/Resources/Data/CreditData.json";
 
             LoadCredit();
 
@@ -41,16 +45,18 @@ namespace BlackJack.Manager
         public void UpdateCreditData(CreditData creditData)
         {
             _creditData = creditData;
+            _onCreditDataChange.OnNext(_creditData.Credit);
+        }
+
+        public void CreateCreditData()
+        {
+            SAVE_DATA_PATH_FOR_CREATE = Application.dataPath + "/Resources/Data/CreditData.json";
+            CreateJson(_creditData, SAVE_DATA_PATH_FOR_CREATE);
         }
 
         private void LoadCredit()
         {
             _creditData = LoadFromJson<CreditData>(SAVE_DATA_PATH_FOR_LOAD);
-        }
-
-        private void CreateCreditData()
-        {
-            CreateJson(_creditData, SAVE_DATA_PATH_FOR_CREATE);
         }
     }
 }
