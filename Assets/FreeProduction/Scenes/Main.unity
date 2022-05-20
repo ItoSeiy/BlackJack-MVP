@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 262224596}
   - component: {fileID: 262224597}
   m_Layer: 0
-  m_Name: Board Result View
+  m_Name: BoardResultView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -714,7 +714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bcf89a2070f71f4799042c0bfd9c610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToStartButtonSelectable: 3000
+  _timeToStartButtonSelectable: 1000
   _timeToSelectableActionButton: 1000
   _notificationDuration: 2
   _notificationText: {fileID: 1744446763}
@@ -952,7 +952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b2de47535414d47959d408d5f64eb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _drawDuration: 1
+  _drawDuration: 3
 --- !u!4 &604701234
 Transform:
   m_ObjectHideFlags: 0
@@ -1518,7 +1518,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &841159988
 GameObject:
@@ -2076,7 +2076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d53400f832af843b27f9d424ad7205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToDoDispose: 3000
+  _timeToDoDispose: 1000
   _cardViewPrefab: {fileID: 3063385394362846508, guid: 0549d59f816f1e641b2ecc90107ceeea, type: 3}
   _playerCardViewParent: {fileID: 104255001}
   _dealerCardViewParent: {fileID: 1208093416}
@@ -2178,7 +2178,7 @@ RectTransform:
   - {fileID: 195166034}
   - {fileID: 262224596}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3004,3 +3004,48 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060787859}
   m_CullTransparentMesh: 1
+--- !u!1 &2094580382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2094580383}
+  - component: {fileID: 2094580384}
+  m_Layer: 0
+  m_Name: BoardResultView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2094580383
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094580382}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2094580384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2094580382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dbdf12aada5e214f918050bef8c5ecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _boardResultView: {fileID: 262224597}
+  _timeToDoInit: 1000
