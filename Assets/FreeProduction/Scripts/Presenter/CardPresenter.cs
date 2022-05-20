@@ -17,7 +17,7 @@ namespace BlackJack.Presenter
 
         [SerializeField]
         [Header("ゲーム終了後にカードを破棄するまでの時間(ミリ秒)")]
-        private int _timeToDoDispose = 3000;
+        private int _timeToDoDispose = 2000;
 
         [SerializeField]
         CardView _cardViewPrefab;
@@ -54,13 +54,26 @@ namespace BlackJack.Presenter
         private void Start()
         {
             Subscribe();
-            BoardModel.Instance.OnInitialize += Subscribe;
+            SetEvent();
         }
 
         #endregion
 
         #region Privete Methods
 
+        /// <summary>
+        /// デリゲートに関数を登録
+        /// </summary>
+        private void SetEvent()
+        {
+            BoardModel.Instance.OnOpenUpCard += OpenInitialUpCard;
+            BoardModel.Instance.OnOpenHoleCard += OpenHoleCard;
+            BoardModel.Instance.OnInitialize += Subscribe;
+        }
+
+        /// <summary>
+        /// IObservableでイベントを購読
+        /// </summary>
         private void Subscribe()
         {
             BoardModel.Instance.ObservableLatestPlayerCard
@@ -83,10 +96,8 @@ namespace BlackJack.Presenter
                         GenerateDealerCard(x, false);
                     }
                 });
-
-            BoardModel.Instance.OnOpenUpCard += OpenInitialUpCard;
-            BoardModel.Instance.OnOpenHoleCard += OpenHoleCard;
         }
+
 
         private void GeneratePlayerCard(CardData cardData)
         {
