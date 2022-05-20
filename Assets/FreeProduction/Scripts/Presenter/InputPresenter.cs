@@ -20,21 +20,31 @@ namespace BlackJack.Presenter
         private void Start()
         {
             Subscribe();
+            SetEvent();
         }
 
         #endregion
 
         #region Private Methods
 
+        /// <summary>
+        /// IObservableでイベントを購読
+        /// </summary>
         private void Subscribe()
         {
             _inputView.ObservableGameStart.Subscribe(OnGameStart);
             _inputView.ObservableHitButton.Subscribe(_ => OnHitButton());
             _inputView.ObservableStayButton.Subscribe(_ => OnStayButton());
 
-            BoardModel.Instance.OnInitialize += OnInit;
-
             SetSelectAction();
+        }
+
+        /// <summary>
+        /// デリゲートに関数を登録
+        /// </summary>
+        private void SetEvent()
+        {
+            BoardModel.Instance.OnInitialize += OnInit;
         }
 
         private void OnInit()
@@ -51,7 +61,7 @@ namespace BlackJack.Presenter
         {
             // 初回の2回は初回のドローなのでスキップする 
             // スキップ後はボタンを表示する
-            BoardModel.Instance.SetSelectAction
+            BoardModel.Instance.ObservableSetSelectAction
                 .Skip(4)
                 .Subscribe(_inputView.SetActionButton);
         }
