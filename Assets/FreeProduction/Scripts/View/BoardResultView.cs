@@ -28,7 +28,7 @@ namespace BlackJack.View
             {
                 case BoardModel.ResultType.NormalWin:
 
-                    _resultText.text = "Win";
+                    _resultText.text = "Win!";
 
                     break;
 
@@ -60,6 +60,13 @@ namespace BlackJack.View
         public void SetDealerHandTextNum(int num)
         {
             _dealerHandNumText.text = num.ToString();
+        }
+
+        public void Init()
+        {
+            _resultText.text = string.Empty;
+            _playerHandNumText.text = string.Empty;
+            _dealerHandNumText.text= string.Empty;
         }
 
         #endregion
