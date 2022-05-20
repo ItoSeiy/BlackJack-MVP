@@ -42,7 +42,7 @@ namespace BlackJack.View
         private int _timeToStartButtonSelectable = 3000;
 
         [SerializeField]
-        [Header("アクションのボタンを選択後から推せるようになるまでの時間(ミリ秒)")]
+        [Header("アクションのボタンを選択後から押せるようになるまでの時間(ミリ秒)")]
         private int _timeToSelectableActionButton = 1000;
 
         [SerializeField]
@@ -150,6 +150,10 @@ namespace BlackJack.View
                 if (string.IsNullOrWhiteSpace(x) == false)
                 {
                     SetBetValue(int.Parse(x));
+                }
+                else
+                {
+                    SetBetValue(0);
                 }
             });
 
