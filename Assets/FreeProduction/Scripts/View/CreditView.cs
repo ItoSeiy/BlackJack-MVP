@@ -64,8 +64,8 @@ namespace BlackJack.View
         /// </summary>
         public void Init()
         {
-            _winBetText.text = "";
-            _betValueText.text = "";
+            _winBetText.text = string.Empty;
+            _betValueText.text = string.Empty;
         }
 
         #endregion
