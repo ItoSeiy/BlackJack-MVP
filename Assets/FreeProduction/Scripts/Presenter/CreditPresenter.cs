@@ -25,13 +25,16 @@ namespace BlackJack.Presenter
         {
             Subscribe();
             SetUp();
-            BoardModel.Instance.OnInitialize += SetUp;
+            SetEvent();
         }
 
         #endregion
-        
+
         #region Private Methods
 
+        /// <summary>
+        /// IObservable‚ÅƒCƒxƒ“ƒg‚ğw“Ç
+        /// </summary>
         private void Subscribe()
         {
             BetModel.Instance.ObservableReturnBetValue.Subscribe(x =>
@@ -45,6 +48,11 @@ namespace BlackJack.Presenter
             BetModel.Instance.ObservableSetBetValue.Subscribe(x => _creditView.SetBetValue(x));
 
             CreditDataManager.Instance.ObservableCreditDataChange.Subscribe(x => _creditView.SetCreditText(x));
+        }
+
+        private void SetEvent()
+        {
+            BoardModel.Instance.OnInitialize += SetUp;
         }
 
         private void SetUp()
