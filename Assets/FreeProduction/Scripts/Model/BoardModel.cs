@@ -16,10 +16,16 @@ namespace BlackJack.Model
         #region Properties
 
         /// <summary>
+        /// 勝敗を判定する際にイベントを発行する
+        /// 監視可能
+        /// </summary>
+        public IObservable<ResultType> ObservableJudgeResult => _judgeResult;
+
+        /// <summary>
         /// アクションの選択ボタンの表示,非表示を管理するイベントを発行する
         /// 監視可能
         /// </summary>
-        public IObservable<bool> SetSelectAction => _setActiveSelectAction;
+        public IObservable<bool> ObservableSetSelectAction => _setActiveSelectAction;
 
         /// <summary>
         /// 最新のプレイヤーのカード
@@ -99,6 +105,11 @@ namespace BlackJack.Model
         #endregion
 
         #region Events
+
+        /// <summary>
+        /// 勝敗を判定する際にイベントを発行する
+        /// </summary>
+        private Subject<ResultType> _judgeResult = new Subject<ResultType>();
 
         /// <summary>
         /// アクションの選択ボタンの表示,非表示を管理するイベントを発行する
@@ -327,7 +338,9 @@ namespace BlackJack.Model
                     "\n プレイヤーの負け");
 
                 Init();
+
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
+                _judgeResult.OnNext(ResultType.Lose);
 
                 return;
             }
@@ -336,7 +349,9 @@ namespace BlackJack.Model
                 print("ディーラはバーストしなかった ディーラーの勝ち");
 
                 Init();
+
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
+                _judgeResult.OnNext(ResultType.Lose);
 
                 return;
             }
@@ -345,7 +360,9 @@ namespace BlackJack.Model
                 print("ディーラーがバーストした プレイヤーの勝ち");
 
                 Init();
+
                 BetModel.Instance.ReturnBetValue(ResultType.NormalWin);
+                _judgeResult.OnNext(ResultType.NormalWin);
 
                 return;
             }
@@ -358,6 +375,7 @@ namespace BlackJack.Model
                 Init();
 
                 BetModel.Instance.ReturnBetValue(ResultType.NormalWin);
+                _judgeResult.OnNext(ResultType.NormalWin);
             }
             else if (_playerHandNum < _dealerHandNum)
             {
@@ -365,6 +383,7 @@ namespace BlackJack.Model
                 Init();
 
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
+                _judgeResult.OnNext(ResultType.Lose);
             }
             else
             {
@@ -372,6 +391,7 @@ namespace BlackJack.Model
                 Init();
 
                 BetModel.Instance.ReturnBetValue(ResultType.Draw);
+                _judgeResult.OnNext(ResultType.Draw);
             }
         }
 
@@ -384,7 +404,9 @@ namespace BlackJack.Model
 
                 OpenHoleCard();
                 Init();
+
                 BetModel.Instance.ReturnBetValue(ResultType.Draw);
+                _judgeResult.OnNext(ResultType.Draw);
             }
             else if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true)
             {
@@ -392,7 +414,9 @@ namespace BlackJack.Model
 
                 OpenHoleCard();
                 Init();
+
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
+                _judgeResult.OnNext(ResultType.Lose);
             }
             else if (CheckBlackJack(_playerHandNum) == true)
             {
@@ -400,7 +424,9 @@ namespace BlackJack.Model
 
                 OpenHoleCard();
                 Init();
+
                 BetModel.Instance.ReturnBetValue(ResultType.BlackJack);
+                _judgeResult.OnNext(ResultType.BlackJack);
             }
         }
 
