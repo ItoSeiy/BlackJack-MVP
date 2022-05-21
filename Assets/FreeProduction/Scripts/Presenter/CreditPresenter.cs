@@ -59,6 +59,7 @@ namespace BlackJack.Presenter
         {
             _creditView.SetCreditText(CreditDataManager.Instance.Data.Credit);
             _creditView.Init();
+            CreditDataManager.Instance.CreateCreditData();
         }
 
         #endregion
