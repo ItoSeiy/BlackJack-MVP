@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UniRx;
 using BlackJack.View;
 using System.Threading.Tasks;
+using UniRx;
+using UnityEngine;
 
 namespace BlackJack.Model
 {
@@ -40,7 +38,6 @@ namespace BlackJack.Model
         /// </summary>
         private void Subscribe()
         {
-
             BoardModel.Instance.ObservableLatestPlayerCard
                 .Where(x => x.Num != 0)
                 .Subscribe(_ => _boardResultView.SetPlayerHandTextNum(BoardModel.Instance.PlayerCardNum));
