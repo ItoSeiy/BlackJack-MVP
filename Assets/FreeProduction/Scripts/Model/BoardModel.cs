@@ -202,10 +202,11 @@ namespace BlackJack.Model
                 {
                     // バーストした際にカードにACE(11)が含まれていたらACE(1)として返す
                     // ※ACEはソフトハンドと呼ばれて11とも1とも認識できる
-                    if (x.Rank == CardData.RankType.A11)
+                    if (x.Rank == CardData.RankType.A11 && existsA11 == false)
                     {
                         existsA11 = true;
                         _playerHandNum -= ACE_CARD_OFFSET;
+
                         return x.ChangeRank(CardData.RankType.A1);
                     }
                     else
@@ -216,8 +217,11 @@ namespace BlackJack.Model
 
                 if (existsA11 == true)
                 {
-                    Debug.Log($"21を超えたがACE(11)が含まれていたためハンドの数字が変更された" +
+                    Debug.Log($"21を超えたがACE(11)が含まれていたためプレイヤーのハンドの数字が変更された" +
                         $"\n現在の数字は{_playerHandNum}");
+
+                    // 変更した結果を適用 イベント発行
+                    _latestPlayerCard.Value = _playerHand[_playerHandIndex];
 
                     if (CheckBlackJack(_playerHandNum) == true)
                     {
@@ -270,6 +274,37 @@ namespace BlackJack.Model
 
             Debug.Log($"ディーラーがカードを引いた 引いた数字は{_dealerHand[_dealerHandIndex].Num}" +
                 $"\n現在のアップカードは{_dealerHandNum}ホールカードは{_dealerHoleHandNum}");
+
+            if(CheckBust(_dealerHandNum) == true)
+            {
+                bool existsA11 = false;
+
+                _dealerHand = _dealerHand.Select(x =>
+                {
+                    // バーストした際にカードにACE(11)が含まれていたらACE(1)として返す
+                    // ※ACEはソフトハンドと呼ばれて11とも1とも認識できる
+                    if(x.Rank == CardData.RankType.A11 && existsA11 == false)
+                    {
+                        existsA11 = true;
+                        _dealerHandNum -= ACE_CARD_OFFSET;
+
+                        return x.ChangeRank(CardData.RankType.A1);
+                    }
+                    else
+                    {
+                        return x;
+                    }
+                }).ToList();
+
+                if(existsA11 == true)
+                {
+                    Debug.Log($"21を超えたがACE(11)が含まれていたためディーラーのハンドの数字が変更された" +
+                        $"\n現在の数字は{_dealerHandNum}");
+
+                    // 変更した結果を適用 イベント発行
+                    _latestDealerCard.Value = _dealerHand[_dealerHandIndex];
+                }
+            }
 
             _dealerHandIndex++;
         }
