@@ -15,6 +15,8 @@ namespace BlackJack.Model
     {
         #region Properties
 
+        // ------------------------------------ゲーム進行
+
         /// <summary>
         /// 勝敗を判定する際にイベントを発行する
         /// 監視可能
@@ -28,26 +30,40 @@ namespace BlackJack.Model
         public IObservable<bool> ObservableSetSelectAction => _setActiveSelectAction;
 
         /// <summary>
-        /// 最新のプレイヤーのカード
-        /// 監視可能, プレイヤーの手札の更新時にイベントを発生する
-        /// </summary>
-        public IObservable<CardData> ObservableLatestPlayerCard => _latestPlayerCard;
-
-        public int PlayerCardNum => _playerHandNum;
-
-        /// <summary>
-        /// 最新のプレイヤーのカード
-        /// 監視可能, ディーラーの手札の更新時にイベントを発生する
-        /// </summary>
-        public IObservable<CardData> ObservableLatestDealerCard => _latestDealerCard;
-
-        public int DealerCardNum => _dealerHandNum;
-
-        /// <summary>
         /// ブラックジャックが開始しているかどうかのフラグ
         /// true -> 開始
         /// </summary>
         public bool IsStarted { get; private set; } = false;
+
+        // ------------------------------------------------プレイヤー
+
+        /// <summary>
+        /// 最新のプレイヤーのカード
+        /// 監視可能, プレイヤーの手札の更新時にイベントを発行する
+        /// </summary>
+        public IObservable<CardData> ObservableLatestPlayerCard => _latestPlayerCard;
+
+        /// <summary>
+        /// プレイヤーの手札の数字 
+        /// 監視可能, 手札の数字更新時にイベントを発行する
+        ///</summary>
+        public IObservable<int> ObservablePlayerCardNum => _playerHandNum;
+
+        /// <summary>プレイヤーの手札の数字 </summary>
+        public int PlayerCardNum => _playerHandNum.Value;
+
+        // ----------------------------------------------ディーラー
+
+        /// <summary>
+        /// 最新のプレイヤーのカード
+        /// 監視可能, ディーラーの手札の更新時にイベントを発行する
+        /// </summary>
+        public IObservable<CardData> ObservableLatestDealerCard => _latestDealerCard;
+
+        public IObservable<int> ObservableDealerCardNum => _dealerHandNum;
+
+        /// <summary>ディーラーの手札の数字 </summary>
+        public int DealerCardNum => _dealerHandNum.Value;
 
         #endregion
 
@@ -67,10 +83,13 @@ namespace BlackJack.Model
         /// <summary>プレイヤーの手札</summary>
         private List<CardData> _playerHand = new List<CardData>();
 
+        /// <summary>プレイヤーの手札のIndex</summary>
         private int _playerHandIndex = 0;
 
-        /// <summary>プレイヤーの数字</summary>
-        private int _playerHandNum = 0;
+        /// <summary>プレイヤーの手札の数字</summary>
+        private ReactiveProperty<int> _playerHandNum = new ReactiveProperty<int>();
+
+
 
         /// <summary>最新のディーラーのカード</summary>
         private ReactiveProperty<CardData> _latestDealerCard = new ReactiveProperty<CardData>();
@@ -78,10 +97,11 @@ namespace BlackJack.Model
         /// <summary>ディーラーの手札</summary>
         private List<CardData> _dealerHand = new List<CardData>();
 
+        /// <summary>ディーラーの手札のIndex</summary>
         private int _dealerHandIndex = 0;
 
-        /// <summary>ディーラーの手札の数字</summary>
-        private int _dealerHandNum = 0;
+        /// <summary>ディーラーの手札の数字 数字</summary>
+        private ReactiveProperty<int> _dealerHandNum = new ReactiveProperty<int>();
 
         /// <summary>ディーラーの伏せているカードの数字</summary>
         private int _dealerHoleHandNum = 0;
@@ -182,19 +202,19 @@ namespace BlackJack.Model
             _setActiveSelectAction.OnNext(false);
 
             _playerHand.Add(CardStackModel.Instance.CurrentCard);
-            _playerHandNum += _playerHand[_playerHandIndex].Num;
+            _playerHandNum.Value += _playerHand[_playerHandIndex].Num;
             _latestPlayerCard.Value = _playerHand[_playerHandIndex];
 
             Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}" +
                 $"\n現在の数字は{_playerHandNum}");
 
-            if (CheckBlackJack(_playerHandNum) == true)
+            if (CheckBlackJack(_playerHandNum.Value) == true)
             {
                 EndAction();
                 return;
             }
 
-            if (CheckBust(_playerHandNum) == true)
+            if (CheckBust(_playerHandNum.Value) == true)
             {
                 bool existsA11 = false;
 
@@ -205,7 +225,7 @@ namespace BlackJack.Model
                     if (x.Rank == CardData.RankType.A11 && existsA11 == false)
                     {
                         existsA11 = true;
-                        _playerHandNum -= ACE_CARD_OFFSET;
+                        _playerHandNum.Value -= ACE_CARD_OFFSET;
 
                         return x.ChangeRank(CardData.RankType.A1);
                     }
@@ -220,10 +240,7 @@ namespace BlackJack.Model
                     Debug.Log($"21を超えたがACE(11)が含まれていたためプレイヤーのハンドの数字が変更された" +
                         $"\n現在の数字は{_playerHandNum}");
 
-                    // 変更した結果を適用 イベント発行
-                    _latestPlayerCard.Value = _playerHand[_playerHandIndex];
-
-                    if (CheckBlackJack(_playerHandNum) == true)
+                    if (CheckBlackJack(_playerHandNum.Value) == true)
                     {
                         EndAction();
                         return;
@@ -258,7 +275,7 @@ namespace BlackJack.Model
                 case DealerCardType.Up:
 
                     _dealerHand.Add(CardStackModel.Instance.CurrentCard);
-                    _dealerHandNum += _dealerHand[_dealerHandIndex].Num;
+                    _dealerHandNum.Value += _dealerHand[_dealerHandIndex].Num;
 
                     break;
 
@@ -275,7 +292,7 @@ namespace BlackJack.Model
             Debug.Log($"ディーラーがカードを引いた 引いた数字は{_dealerHand[_dealerHandIndex].Num}" +
                 $"\n現在のアップカードは{_dealerHandNum}ホールカードは{_dealerHoleHandNum}");
 
-            if(CheckBust(_dealerHandNum) == true)
+            if(CheckBust(_dealerHandNum.Value) == true)
             {
                 bool existsA11 = false;
 
@@ -286,7 +303,7 @@ namespace BlackJack.Model
                     if(x.Rank == CardData.RankType.A11 && existsA11 == false)
                     {
                         existsA11 = true;
-                        _dealerHandNum -= ACE_CARD_OFFSET;
+                        _dealerHandNum.Value -= ACE_CARD_OFFSET;
 
                         return x.ChangeRank(CardData.RankType.A1);
                     }
@@ -300,9 +317,6 @@ namespace BlackJack.Model
                 {
                     Debug.Log($"21を超えたがACE(11)が含まれていたためディーラーのハンドの数字が変更された" +
                         $"\n現在の数字は{_dealerHandNum}");
-
-                    // 変更した結果を適用 イベント発行
-                    _latestDealerCard.Value = _dealerHand[_dealerHandIndex];
                 }
             }
 
@@ -327,8 +341,8 @@ namespace BlackJack.Model
             DrawDealerCard(DealerCardType.Hole);
             OnOpenUpCard?.Invoke();
 
-            if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
-                || CheckBlackJack(_playerHandNum) == true)
+            if (CheckBlackJack(_dealerHandNum.Value + _dealerHoleHandNum) == true
+                || CheckBlackJack(_playerHandNum.Value) == true)
             {
                 JudgeBlackJack();
                 yield break;
@@ -346,14 +360,14 @@ namespace BlackJack.Model
             OpenHoleCard();
 
             // ディーラーはハンドが17以上になるまで引き続ける
-            while (_dealerHandNum < DEALER_DRAWING_HAND_LIMIT)
+            while (_dealerHandNum.Value < DEALER_DRAWING_HAND_LIMIT)
             {
                 yield return new WaitForSeconds(_drawDuration);
                 DrawDealerCard(DealerCardType.Up);
             }
 
             // ディーラがハンドを引き終えたら最終的な勝敗の判別を行う
-            if (_dealerHandNum >= DEALER_DRAWING_HAND_LIMIT)
+            if (_dealerHandNum.Value >= DEALER_DRAWING_HAND_LIMIT)
             {
                 yield return new WaitForSeconds(_drawDuration);
                 Judge();
@@ -366,101 +380,96 @@ namespace BlackJack.Model
         private void Judge()
         {
             // バーストの状況を確認して勝ち負けを確定させる
-            if (CheckBust(_dealerHandNum) == true
-                && CheckBust(_playerHandNum) == true)
+            if (CheckBust(_dealerHandNum.Value) == true
+                && CheckBust(_playerHandNum.Value) == true)
             {
                 print("ディーラーがバーストした しかしプレイヤーはすでにバーストしている" +
                     "\n プレイヤーの負け");
 
-                Init();
-
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
+                Init();
                 _judgeResult.OnNext(ResultType.Lose);
 
                 return;
             }
-            else if (CheckBust(_playerHandNum) == true)
+            else if (CheckBust(_playerHandNum.Value) == true)
             {
                 print("ディーラはバーストしなかった ディーラーの勝ち");
 
-                Init();
-
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
+                Init();
                 _judgeResult.OnNext(ResultType.Lose);
 
                 return;
             }
-            else if (CheckBust(_dealerHandNum) == true)
+            else if (CheckBust(_dealerHandNum.Value) == true)
             {
                 print("ディーラーがバーストした プレイヤーの勝ち");
 
-                Init();
-
                 BetModel.Instance.ReturnBetValue(ResultType.NormalWin);
+                Init();
                 _judgeResult.OnNext(ResultType.NormalWin);
 
                 return;
             }
 
             // 両者バーストしていなかったら数字で勝敗を確定させる
-            if (_playerHandNum > _dealerHandNum)
+            if (_playerHandNum.Value > _dealerHandNum.Value)
             {
                 print($"プレイヤーの勝ち\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
 
-                Init();
-
                 BetModel.Instance.ReturnBetValue(ResultType.NormalWin);
+                Init();
                 _judgeResult.OnNext(ResultType.NormalWin);
             }
-            else if (_playerHandNum < _dealerHandNum)
+            else if (_playerHandNum.Value < _dealerHandNum.Value)
             {
                 print($"ディーラーの勝ち\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
-                Init();
 
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
+                Init();
                 _judgeResult.OnNext(ResultType.Lose);
             }
             else
             {
                 print($"引き分け\nプレイヤー{_playerHandNum} ディーラー{_dealerHandNum}");
-                Init();
-
                 BetModel.Instance.ReturnBetValue(ResultType.Draw);
+                Init();
                 _judgeResult.OnNext(ResultType.Draw);
             }
         }
 
         private void JudgeBlackJack()
         {
-            if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true
-                && CheckBlackJack(_playerHandNum) == true)
+            if (CheckBlackJack(_dealerHandNum.Value + _dealerHoleHandNum) == true
+                && CheckBlackJack(_playerHandNum.Value) == true)
             {
                 print("両者がブラックジャック 引き分け");
 
                 OpenHoleCard();
-                Init();
-
                 BetModel.Instance.ReturnBetValue(ResultType.Draw);
+
+                Init();
                 _judgeResult.OnNext(ResultType.Draw);
             }
-            else if (CheckBlackJack(_dealerHandNum + _dealerHoleHandNum) == true)
+            else if (CheckBlackJack(_dealerHandNum.Value + _dealerHoleHandNum) == true)
             {
                 print("ディーラーがブラックジャック ディーラーの勝ち");
 
                 OpenHoleCard();
-                Init();
-
                 BetModel.Instance.ReturnBetValue(ResultType.Lose);
+
+                Init();
                 _judgeResult.OnNext(ResultType.Lose);
             }
-            else if (CheckBlackJack(_playerHandNum) == true)
+            else if (CheckBlackJack(_playerHandNum.Value) == true)
             {
                 print("プレイヤーがブラックジャック プレイヤーの勝ち");
 
                 OpenHoleCard();
-                Init();
-
                 BetModel.Instance.ReturnBetValue(ResultType.BlackJack);
+
+                Init();
                 _judgeResult.OnNext(ResultType.BlackJack);
             }
         }
@@ -470,7 +479,7 @@ namespace BlackJack.Model
         /// </summary>
         private void OpenHoleCard()
         {
-            _dealerHandNum += _dealerHoleHandNum;
+            _dealerHandNum.Value += _dealerHoleHandNum;
             _dealerHoleHandNum = 0;
             OnOpenHoleCard?.Invoke();
             print($"ディーラーがホールカードを公開した\n現在の数字は{_dealerHandNum}");
@@ -513,8 +522,10 @@ namespace BlackJack.Model
             _latestPlayerCard.Dispose();
             _latestPlayerCard = new ReactiveProperty<CardData>();
 
+            _playerHandNum.Dispose();
+            _playerHandNum = new ReactiveProperty<int>();
+
             _playerHand = new List<CardData>();
-            _playerHandNum = 0;
             _playerHandIndex = 0;
 
 
@@ -522,8 +533,10 @@ namespace BlackJack.Model
             _latestDealerCard.Dispose();
             _latestDealerCard = new ReactiveProperty<CardData>();
 
+            _dealerHandNum.Dispose();
+            _dealerHandNum = new ReactiveProperty<int>();
+
             _dealerHand = new List<CardData>();
-            _dealerHandNum = 0;
             _dealerHandIndex = 0;
             _dealerHoleHandNum = 0;
 

@@ -77,13 +77,11 @@ namespace BlackJack.Presenter
         private void Subscribe()
         {
             BoardModel.Instance.ObservableLatestPlayerCard
-                .DistinctUntilChanged()
                 .Where(x => x.Sprite != null)
                 .Subscribe(onNext: GeneratePlayerCard,
                       onCompleted: Init);
 
             BoardModel.Instance.ObservableLatestDealerCard
-                .DistinctUntilChanged()
                 .Where(x => x.Sprite != null)
                 .Subscribe(x =>
                 {

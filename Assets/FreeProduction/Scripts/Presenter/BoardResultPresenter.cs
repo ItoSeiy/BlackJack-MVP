@@ -38,14 +38,14 @@ namespace BlackJack.Model
         /// </summary>
         private void Subscribe()
         {
-            BoardModel.Instance.ObservableLatestPlayerCard
-                .Where(x => x.Num != 0)
-                .Subscribe(_ => _boardResultView.SetPlayerHandTextNum(BoardModel.Instance.PlayerCardNum));
+            BoardModel.Instance.ObservablePlayerCardNum
+                .Where(x => x != 0)
+                .Subscribe(_boardResultView.SetPlayerHandTextNum);
 
-            BoardModel.Instance.ObservableLatestDealerCard
-                .Where(x => x.Num != 0)
+            BoardModel.Instance.ObservableDealerCardNum
+                .Where(x => x != 0)
                 .Skip(1) //一度目のイベント発行時はディーラーはまだカードを公開していないので無視をする
-                .Subscribe(_ => _boardResultView.SetDealerHandTextNum(BoardModel.Instance.DealerCardNum));
+                .Subscribe(_boardResultView.SetDealerHandTextNum);
 
             BoardModel.Instance.ObservableJudgeResult
                 .Subscribe(_boardResultView.SetResultText);
