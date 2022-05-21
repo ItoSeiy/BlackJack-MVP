@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace BlackJack.Data
 {
     [System.Serializable]
-    public struct CardData
+    public struct CardData : IEquatable<CardData>
     {
         public int Num =>
             _rank == RankType.A1 ? 1 :
@@ -60,6 +61,11 @@ namespace BlackJack.Data
             Debug.Log("カードのランクが変更された");
             Show();
             return this;
+        }
+
+        bool IEquatable<CardData>.Equals(CardData other)
+        {
+            return Sprite != null && Sprite.Equals(other.Sprite) && Suit.Equals(other.Suit);
         }
 
         public enum RankType
