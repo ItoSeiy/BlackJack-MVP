@@ -1,6 +1,7 @@
 using BlackJack.Model;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace BlackJack.View
 {
@@ -13,6 +14,14 @@ namespace BlackJack.View
         private Text _resultText;
 
         [SerializeField]
+        [Header("ResultTextを出力するときのアニメーションのカーブ")]
+        public AnimationCurve _doTextCurve;
+
+        [SerializeField]
+        [Header("ResultTextを出力するときのアニメーションの時間")]
+        private float _resultTextAnimDuration = 1f;
+
+        [SerializeField]
         private Text _playerHandNumText;
 
         [SerializeField]
@@ -21,7 +30,7 @@ namespace BlackJack.View
         #endregion
 
         #region Public Methods
-        
+
         public void SetResultText(BoardModel.ResultType resultType)
         {
             switch (resultType)
@@ -46,7 +55,10 @@ namespace BlackJack.View
 
                 case BoardModel.ResultType.BlackJack:
 
-                    _resultText.text = "BlackJack!!";
+                    _resultText.DOText("Black Jack!!", _resultTextAnimDuration,
+                        scrambleMode: ScrambleMode.Custom,
+                        scrambleChars: "Black Jack!!")
+                        .SetEase(_doTextCurve);
 
                     break;
             }

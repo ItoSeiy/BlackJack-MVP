@@ -58,7 +58,7 @@ namespace BlackJack.Presenter
         private void SetUp()
         {
             _creditView.SetCreditText(CreditDataManager.Instance.Data.Credit);
-            _creditView.Init();
+            _ = _creditView.Init();
             CreditDataManager.Instance.CreateCreditData();
         }
 
