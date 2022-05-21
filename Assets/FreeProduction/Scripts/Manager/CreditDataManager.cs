@@ -3,6 +3,7 @@ using System;
 using UniRx;
 using UnityEngine;
 using static BlackJack.Model.JsonModel;
+using static BlackJack.Model.FileUtils;
 
 namespace BlackJack.Manager
 {
@@ -23,9 +24,10 @@ namespace BlackJack.Manager
 
         private Subject<int> _onCreditDataChange = new Subject<int>();
 
-        private const string SAVE_DATA_PATH_FOR_LOAD = "Data/CreditData";
+        /// <summary>初回読み込みのパス</summary>
+        private const string SAVE_DATA_PATH_FOR_INITIAL_LOAD = "Data/CreditData";
 
-        private string SAVE_DATA_PATH_FOR_CREATE;
+        private const string DATA_FILE_NAME = "CreditData.json";
 
         protected override void Awake()
         {
@@ -49,13 +51,21 @@ namespace BlackJack.Manager
 
         public void CreateCreditData()
         {
-            SAVE_DATA_PATH_FOR_CREATE = Application.dataPath + "/Resources/Data/CreditData.json";
-            CreateJson(_creditData, SAVE_DATA_PATH_FOR_CREATE);
+            CreateJson(_creditData, GetWritableDirectoryPath() + "/" + DATA_FILE_NAME);
         }
 
         private void LoadCredit()
         {
-            _creditData = LoadFromJson<CreditData>(SAVE_DATA_PATH_FOR_LOAD);
+            try
+            {
+                // 読み書き可能なファイルからデータを読み込んでみる
+                _creditData = LoadJson<CreditData>(GetWritableDirectoryPath() + "/" + DATA_FILE_NAME);
+            }
+            catch (Exception)
+            {
+                // 初回読み込み時はデータがリソースファイルにしかないためリソースファイルから読み込む
+                _creditData = LoadJsonFromResources<CreditData>(SAVE_DATA_PATH_FOR_INITIAL_LOAD);
+            }
         }
     }
 }
