@@ -335,7 +335,6 @@ MonoBehaviour:
   _betValueText: {fileID: 501992502}
   _winBetText: {fileID: 609472628}
   _numTextAnimDuration: 0.5
-  _timeToDoInitText: 1500
 --- !u!1 &262224595
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,7 +740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bcf89a2070f71f4799042c0bfd9c610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToStartButtonSelectable: 1500
+  _timeToStartButtonSelectable: 2000
   _timeToSelectableActionButton: 1000
   _notificationDuration: 2
   _notificationText: {fileID: 1744446763}
@@ -2103,10 +2102,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d53400f832af843b27f9d424ad7205, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToDoDispose: 1000
   _cardViewPrefab: {fileID: 3063385394362846508, guid: 0549d59f816f1e641b2ecc90107ceeea, type: 3}
   _playerCardViewParent: {fileID: 104255001}
   _dealerCardViewParent: {fileID: 1208093416}
+  _timeToDoDispose: 2000
 --- !u!1 &1400131273
 GameObject:
   m_ObjectHideFlags: 0
@@ -2400,6 +2399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _creditView: {fileID: 195166035}
+  _timeToDoInitText: 2000
 --- !u!4 &1704377465
 Transform:
   m_ObjectHideFlags: 0
@@ -3075,4 +3075,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _boardResultView: {fileID: 262224597}
-  _timeToDoInit: 1000
+  _timeToDoInit: 2000
