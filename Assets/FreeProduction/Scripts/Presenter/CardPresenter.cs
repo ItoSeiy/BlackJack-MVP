@@ -81,11 +81,11 @@ namespace BlackJack.Presenter
         private void Subscribe()
         {
             BoardModel.Instance.ObservableLatestPlayerCard
-                .Where(x => x.Sprite != null)
+                .Where(x => x != null)
                 .Subscribe(GeneratePlayerCard);
 
             BoardModel.Instance.ObservableLatestDealerCard
-                .Where(x => x.Sprite != null)
+                .Where(x => x != null)
                 .Subscribe(x =>
                 {
                     _dealerDrawCounter++;
