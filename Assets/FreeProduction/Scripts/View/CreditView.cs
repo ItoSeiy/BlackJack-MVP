@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
-using System.Threading.Tasks;
 
 namespace BlackJack.View
 {
@@ -30,10 +27,6 @@ namespace BlackJack.View
         [SerializeField]
         [Header("数字のテキストを出力するときのアニメーションの時間")]
         private float _numTextAnimDuration = 0.5f;
-
-        [SerializeField]
-        [Header("数字を初期化するまでの時間(ミリ秒)")]
-        private int _timeToDoInitText = 3000;
 
         #endregion
 
@@ -111,11 +104,10 @@ namespace BlackJack.View
         /// <summary>
         /// 初期化する
         /// </summary>
-        public async Task Init()
+        public void Init()
         {
-            await Task.Delay(_timeToDoInitText);
-            _winBetText.text = string.Empty;
             _betValueText.text = string.Empty;
+            _winBetText.text = string.Empty;
         }
 
         #endregion

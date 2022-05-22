@@ -4,6 +4,7 @@ using BlackJack.Model;
 using BlackJack.View;
 using UniRx;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace BlackJack.Presenter
 {
@@ -17,6 +18,10 @@ namespace BlackJack.Presenter
         [SerializeField]
         private CreditView _creditView;
 
+        [SerializeField]
+        [Header("”š‚ğ‰Šú‰»‚·‚é‚Ü‚Å‚ÌŠÔ(ƒ~ƒŠ•b)")]
+        private int _timeToDoInitText = 1500;
+
         #endregion
 
         #region Unity Methods
@@ -24,7 +29,7 @@ namespace BlackJack.Presenter
         private void Awake()
         {
             Subscribe();
-            SetUp();
+            Init();
             SetEvent();
         }
 
@@ -52,14 +57,15 @@ namespace BlackJack.Presenter
 
         private void SetEvent()
         {
-            BoardModel.Instance.OnInitialize += SetUp;
+            BoardModel.Instance.OnInitialize += Init;
         }
 
-        private void SetUp()
+        private async void Init()
         {
             _creditView.SetCreditText(CreditDataManager.Instance.Data.Credit);
-            _ = _creditView.Init();
             CreditDataManager.Instance.CreateCreditData();
+            await Task.Delay(_timeToDoInitText);
+            _creditView.Init();
         }
 
         #endregion
