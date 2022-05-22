@@ -208,54 +208,15 @@ namespace BlackJack.Model
             Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}" +
                 $"\n現在の数字は{_playerHandNum}");
 
-            if (checkBlackJack == true && CheckBlackJack(_playerHandNum.Value) == true)
+            if(CheckBust(_playerHandNum.Value) == true && CheckPlayerA11() == false)// A11が存在せずバーストしていたら
             {
                 EndAction();
                 return;
             }
 
-            if (CheckBust(_playerHandNum.Value) == true)
+            if (checkBlackJack == true && CheckBlackJack(_playerHandNum.Value) == true)
             {
-                bool existsA11 = false;
-
-                _playerHand = _playerHand.Select(x =>
-                {
-                    // バーストした際にカードにACE(11)が含まれていたらACE(1)として返す
-                    // ※ACEはソフトハンドと呼ばれて11とも1とも認識できる
-                    if (x.Rank == CardData.RankType.A11 && existsA11 == false)
-                    {
-                        existsA11 = true;
-                        _playerHandNum.Value -= ACE_CARD_OFFSET;
-
-                        return x.ChangeRank(CardData.RankType.A1);
-                    }
-                    else
-                    {
-                        return x;
-                    }
-                }).ToList();
-
-                if (existsA11 == true)
-                {
-                    Debug.Log($"21を超えたがACE(11)が含まれていたためプレイヤーのハンドの数字が変更された" +
-                        $"\n現在の数字は{_playerHandNum}");
-
-                    if (CheckBlackJack(_playerHandNum.Value) == true)
-                    {
-                        EndAction();
-                        return;
-                    }
-                    else
-                    {
-                        _setActiveSelectAction.OnNext(true);
-                        _playerHandIndex++;
-                        return; //バーストはしていない
-                    }
-                }
-
-                // ここまで来たらバースト
                 EndAction();
-                _playerHandIndex++;
                 return;
             }
 
@@ -292,32 +253,9 @@ namespace BlackJack.Model
             Debug.Log($"ディーラーがカードを引いた 引いた数字は{_dealerHand[_dealerHandIndex].Num}" +
                 $"\n現在のアップカードは{_dealerHandNum}ホールカードは{_dealerHoleHandNum}");
 
-            if(CheckBust(_dealerHandNum.Value) == true)
+            if (CheckBust(_dealerHandNum.Value) == true)
             {
-                bool existsA11 = false;
-
-                _dealerHand = _dealerHand.Select(x =>
-                {
-                    // バーストした際にカードにACE(11)が含まれていたらACE(1)として返す
-                    // ※ACEはソフトハンドと呼ばれて11とも1とも認識できる
-                    if(x.Rank == CardData.RankType.A11 && existsA11 == false)
-                    {
-                        existsA11 = true;
-                        _dealerHandNum.Value -= ACE_CARD_OFFSET;
-
-                        return x.ChangeRank(CardData.RankType.A1);
-                    }
-                    else
-                    {
-                        return x;
-                    }
-                }).ToList();
-
-                if(existsA11 == true)
-                {
-                    Debug.Log($"21を超えたがACE(11)が含まれていたためディーラーのハンドの数字が変更された" +
-                        $"\n現在の数字は{_dealerHandNum}");
-                }
+                CheckDealerA11();
             }
 
             _dealerHandIndex++;
@@ -466,7 +404,8 @@ namespace BlackJack.Model
             {
                 print("プレイヤーがブラックジャック プレイヤーの勝ち");
 
-                OpenHoleCard();
+                EndAction();
+
                 BetModel.Instance.ReturnBetValue(ResultType.BlackJack);
 
                 Init();
@@ -483,6 +422,83 @@ namespace BlackJack.Model
             _dealerHoleHandNum = 0;
             OnOpenHoleCard?.Invoke();
             print($"ディーラーがホールカードを公開した\n現在の数字は{_dealerHandNum}");
+
+            if (CheckBust(_dealerHandNum.Value) == true)
+            {
+                CheckDealerA11();
+            }
+        }
+
+        /// <summary>
+        /// プレイヤーがバーストしていた際に呼び出される
+        /// A11を探しA1に戻す関数
+        /// </summary>
+        /// <returns>true -> A11が存在した false -> A11が存在せずバーストした</returns>
+        private bool CheckPlayerA11()
+        {
+            bool existsA11 = false;
+
+            _playerHand = _playerHand.Select(x =>
+            {
+                // バーストした際にカードにACE(11)が含まれていたらACE(1)として返す
+                // ※ACEはソフトハンドと呼ばれて11とも1とも認識できる
+                if (x.Rank == CardData.RankType.A11 && existsA11 == false)
+                {
+                    existsA11 = true;
+                    _playerHandNum.Value -= ACE_CARD_OFFSET;
+
+                    return x.ChangeRank(CardData.RankType.A1);
+                }
+                else
+                {
+                    return x;
+                }
+            }).ToList();
+
+            if (existsA11 == true)
+            {
+                Debug.Log($"21を超えたがACE(11)が含まれていたためプレイヤーのハンドの数字が変更された" +
+                    $"\n現在の数字は{_playerHandNum}");
+
+                return true; // A11が存在しバーストしていない
+            }
+            else
+            {
+                // A11が存在せずバーストバースト
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ディーラーがバーストしていた際に呼び出される
+        /// A11を探しA1に戻す関数
+        /// </summary>
+        private void CheckDealerA11()
+        {
+            bool existsA11 = false;
+
+            _dealerHand = _dealerHand.Select(x =>
+            {
+                // バーストした際にカードにACE(11)が含まれていたらACE(1)として返す
+                // ※ACEはソフトハンドと呼ばれて11とも1とも認識できる
+                if (x.Rank == CardData.RankType.A11 && existsA11 == false)
+                {
+                    existsA11 = true;
+                    _dealerHandNum.Value -= ACE_CARD_OFFSET;
+
+                    return x.ChangeRank(CardData.RankType.A1);
+                }
+                else
+                {
+                    return x;
+                }
+            }).ToList();
+
+            if (existsA11 == true)
+            {
+                Debug.Log($"21を超えたがACE(11)が含まれていたためディーラーのハンドの数字が変更された" +
+                    $"\n現在の数字は{_dealerHandNum}");
+            }
         }
 
         private bool CheckBlackJack(int num)
