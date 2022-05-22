@@ -195,7 +195,7 @@ namespace BlackJack.Model
         }
 
         [ContextMenu("Draw")]
-        public void DrawPlayerCard()
+        public void DrawPlayerCard(bool checkBlackJack = true)
         {
             if (IsStarted == false) return;
 
@@ -208,7 +208,7 @@ namespace BlackJack.Model
             Debug.Log($"プレイヤーがカードを引いた 引いた数字は{_playerHand[_playerHandIndex].Num}" +
                 $"\n現在の数字は{_playerHandNum}");
 
-            if (CheckBlackJack(_playerHandNum.Value) == true)
+            if (checkBlackJack == true && CheckBlackJack(_playerHandNum.Value) == true)
             {
                 EndAction();
                 return;
@@ -326,7 +326,7 @@ namespace BlackJack.Model
         /// <summary>ゲームスタート時のカードを引く処理</summary>
         IEnumerator OnStartDrawing()
         {
-            DrawPlayerCard();
+            DrawPlayerCard(false);
 
             yield return new WaitForSeconds(_drawDuration);
 
@@ -334,7 +334,7 @@ namespace BlackJack.Model
 
             yield return new WaitForSeconds(_drawDuration);
 
-            DrawPlayerCard();
+            DrawPlayerCard(false);
 
             yield return new WaitForSeconds(_drawDuration);
 
@@ -515,8 +515,13 @@ namespace BlackJack.Model
             // ゲーム進行に関する初期化
             IsStarted = false;
 
+            _setActiveSelectAction.OnCompleted();
             _setActiveSelectAction.Dispose();
             _setActiveSelectAction = new Subject<bool>();
+
+            _judgeResult.OnCompleted();
+            _judgeResult.Dispose();
+            _judgeResult = new Subject<ResultType>();
 
             // プレイヤーに関する初期化
             _latestPlayerCard.Dispose();

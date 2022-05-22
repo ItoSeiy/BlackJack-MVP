@@ -16,10 +16,6 @@ namespace BlackJack.Presenter
         #region Inspector Variables
 
         [SerializeField]
-        [Header("ƒQ[ƒ€I—¹Œã‚ÉƒJ[ƒh‚ð”jŠü‚·‚é‚Ü‚Å‚ÌŽžŠÔ(ƒ~ƒŠ•b)")]
-        private int _timeToDoDispose = 2000;
-
-        [SerializeField]
         CardView _cardViewPrefab;
 
         [SerializeField]
@@ -27,6 +23,10 @@ namespace BlackJack.Presenter
 
         [SerializeField]
         private Transform _dealerCardViewParent;
+
+        [SerializeField]
+        [Header("ƒQ[ƒ€I—¹Œã‚ÉƒJ[ƒh‚ð”jŠü‚·‚é‚Ü‚Å‚ÌŽžŠÔ(ƒ~ƒŠ•b)")]
+        private int _timeToDoDispose = 2000;
 
         #endregion
 
@@ -68,7 +68,11 @@ namespace BlackJack.Presenter
         {
             BoardModel.Instance.OnOpenUpCard += OpenInitialUpCard;
             BoardModel.Instance.OnOpenHoleCard += OpenHoleCard;
-            BoardModel.Instance.OnInitialize += Subscribe;
+            BoardModel.Instance.OnInitialize += () =>
+            {
+                Subscribe();
+                Init();
+            };
         }
 
         /// <summary>
@@ -78,8 +82,7 @@ namespace BlackJack.Presenter
         {
             BoardModel.Instance.ObservableLatestPlayerCard
                 .Where(x => x.Sprite != null)
-                .Subscribe(onNext: GeneratePlayerCard,
-                      onCompleted: Init);
+                .Subscribe(GeneratePlayerCard);
 
             BoardModel.Instance.ObservableLatestDealerCard
                 .Where(x => x.Sprite != null)
