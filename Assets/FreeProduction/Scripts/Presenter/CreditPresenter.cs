@@ -19,8 +19,15 @@ namespace BlackJack.Presenter
         private CreditView _creditView;
 
         [SerializeField]
-        [Header("数字を初期化するまでの時間(ミリ秒)")]
+        [Header("テキストを初期化するまでの時間(ミリ秒)")]
         private int _timeToDoInitText = 1500;
+
+        #endregion
+
+        #region Member Variables
+
+        /// <summary>保存用の変数</summary>
+        private int _initialTimeToDoInitText;
 
         #endregion
 
@@ -28,6 +35,10 @@ namespace BlackJack.Presenter
 
         private void Awake()
         {
+            // 保存用の変数に初期値を保存し値を0にする
+            // そうすることで初回の初期化は遅延なく初期化される
+            _initialTimeToDoInitText = _timeToDoInitText;
+            _timeToDoInitText = 0;
             Subscribe();
             Init();
             SetEvent();
@@ -66,6 +77,8 @@ namespace BlackJack.Presenter
             CreditDataManager.Instance.CreateCreditData();
             await Task.Delay(_timeToDoInitText);
             _creditView.Init();
+            // 初回の初期化が完了したらの初期値に戻す
+            _timeToDoInitText = _initialTimeToDoInitText;
         }
 
         #endregion
