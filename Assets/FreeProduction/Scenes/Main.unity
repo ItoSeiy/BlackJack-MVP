@@ -331,9 +331,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95265ec47f2b9d84c9f24b8bc205078c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _creditText: {fileID: 1762247224}
   _betValueText: {fileID: 501992502}
   _winBetText: {fileID: 609472628}
-  _creditText: {fileID: 1762247224}
+  _numTextAnimDuration: 0.5
+  _timeToDoInitText: 1500
 --- !u!1 &262224595
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,11 +390,29 @@ MonoBehaviour:
   _resultText: {fileID: 1633082341}
   _doTextCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _textAnimDuration: 1
+  _resultTextAnimDuration: 1
   _playerHandNumText: {fileID: 682550374}
   _dealerHandNumText: {fileID: 282358119}
 --- !u!1 &269424868
@@ -721,7 +741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bcf89a2070f71f4799042c0bfd9c610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToStartButtonSelectable: 1000
+  _timeToStartButtonSelectable: 1500
   _timeToSelectableActionButton: 1000
   _notificationDuration: 2
   _notificationText: {fileID: 1744446763}
