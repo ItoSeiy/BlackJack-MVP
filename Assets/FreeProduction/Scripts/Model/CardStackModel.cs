@@ -31,6 +31,7 @@ namespace BlackJack.Model
                     {
                         print("山札が残り1デッキになりました 再度山札を生成します");
                         CreateCards();
+                        _cardStackIndex = 0;
                     }
 
                     return _cardStack[_cardStackIndex];
