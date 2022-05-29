@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using UniRx;
+using Photon.Pun;
 
 namespace BlackJack.View
 {
