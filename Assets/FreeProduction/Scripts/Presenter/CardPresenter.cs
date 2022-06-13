@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using System.Threading.Tasks;
+using Photon.Pun;
 
 namespace BlackJack.Presenter
 {
