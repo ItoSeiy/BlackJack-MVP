@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UniRx;
+using BlackJack.Manager;
 
 namespace BlackJack.Model
 {
@@ -72,6 +73,9 @@ namespace BlackJack.Model
         [SerializeField]
         [Header("カードを引く速度の間隔")]
         private float _drawDuration = 1f;
+
+        [SerializeField]
+        private string _drawSoundKey = "Draw";
 
         #endregion
 
@@ -199,6 +203,8 @@ namespace BlackJack.Model
         {
             if (IsStarted == false) return;
 
+            SoundManager.Instance.UseSFX(_drawSoundKey);
+
             _setActiveSelectAction.OnNext(false);
 
             _playerHand.Add(CardStackModel.Instance.CurrentCard);
@@ -231,6 +237,8 @@ namespace BlackJack.Model
 
         private void DrawDealerCard(DealerCardType cardType)
         {
+            SoundManager.Instance.UseSFX(_drawSoundKey);
+
             switch (cardType)
             {
                 case DealerCardType.Up:
@@ -418,6 +426,7 @@ namespace BlackJack.Model
         /// </summary>
         private void OpenHoleCard()
         {
+            SoundManager.Instance.UseSFX(_drawSoundKey);
             _dealerHandNum.Value += _dealerHoleHandNum;
             _dealerHoleHandNum = 0;
             OnOpenHoleCard?.Invoke();
