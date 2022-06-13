@@ -155,7 +155,7 @@ PlayerSettings:
   applicationIdentifier:
     Standalone: com.DefaultCompany.ItoSeiya-Free-production
   buildNumber:
-    Standalone: 0
+    Standalone: 0.3
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
