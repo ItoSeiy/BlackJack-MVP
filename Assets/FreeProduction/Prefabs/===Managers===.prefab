@@ -508,7 +508,25 @@ MonoBehaviour:
     soundPoolParams:
     - name: Draw
       audio: {fileID: 3536480652537528825, guid: e37e562004bd5134ebd3df9866379e41, type: 3}
-      maxCount: 10
+      maxCount: 5
+    - name: Win
+      audio: {fileID: 3536480652537528825, guid: 2c9321945cfb50a4580ac180ee42a411, type: 3}
+      maxCount: 5
+    - name: BlackJack
+      audio: {fileID: 3536480652537528825, guid: 470c92328373da8489b23a226899aa8e, type: 3}
+      maxCount: 5
+    - name: Lose
+      audio: {fileID: 3536480652537528825, guid: 9396080f1f550924b8d58a3ec18381d0, type: 3}
+      maxCount: 5
+    - name: SmallBet
+      audio: {fileID: 3536480652537528825, guid: 0fdb9d6749360e84587e3c115ed782bf, type: 3}
+      maxCount: 5
+    - name: NormalBet
+      audio: {fileID: 3536480652537528825, guid: ee5325c2588c0c941857336b579c7859, type: 3}
+      maxCount: 5
+    - name: BigBet
+      audio: {fileID: 3536480652537528825, guid: 8541411555678c443becf475bc6f8978, type: 3}
+      maxCount: 5
   _bgmAudioSource: {fileID: 7999611176298941158}
   _audioObjParent: {fileID: 6247036804238056692}
 --- !u!82 &7999611176298941158

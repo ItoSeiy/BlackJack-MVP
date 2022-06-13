@@ -13,6 +13,7 @@ namespace BlackJack
         private async void OnEnable()
         {
             await Task.Delay(_disableTimeMilliSecond);
+            gameObject.SetActive(false);    
         }
     }
 }
